@@ -26,7 +26,7 @@ class CreateItemUserTable extends Migration
                 ->references('id')
                 ->on('users');
 
-            $table->decimal('price', 10, 2);
+            $table->integer('price');
             $table->string('status')->default('active');
 
             $table->timestamps();

@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Item;
 use App\Models\User;
-use Illuminate\Http\Request;
 use App\Http\Requests\StoreItem;
+use App\Models\ItemUser;
 use Illuminate\Support\Facades\Auth;
 
 class ItemController extends Controller
@@ -71,5 +71,22 @@ class ItemController extends Controller
 
         return redirect()->back()
                          ->withStatus("You have canceled your item '{$item->name}'");
+    }
+
+    public function bid(Item $item)
+    {
+        $this->authorize($item);
+
+        $rules['price'] = "required|numeric|gt:{$item->starting_price}";
+        $validated = request()->validate($rules);
+
+        ItemUser::create([
+            'item_id' => $item->id,
+            'user_id' => Auth::user()->id,
+            'price' => $validated['price'],
+        ]);
+
+        return redirect()->back()
+                         ->withStatus('You have bidden for this item!');
     }
 }

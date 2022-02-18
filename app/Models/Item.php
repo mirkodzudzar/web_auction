@@ -26,4 +26,10 @@ class Item extends Model
     {
         return $this->belongsTo(User::class, 'buyer_id');
     }
+
+    public function bid_users()
+    {
+        return $this->belongsToMany(User::class)
+                    ->withPivot(['price', 'status']);
+    }
 }

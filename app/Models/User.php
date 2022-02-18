@@ -52,4 +52,10 @@ class User extends Authenticatable
     {
         return $this->hasOne(User::class, 'buyer_id');
     }
+
+    public function bid_items()
+    {
+        return $this->belongsToMany(Item::class)
+                    ->withPivot(['price', 'status']);
+    }
 }

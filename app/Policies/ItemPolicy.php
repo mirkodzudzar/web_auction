@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\Models\Item;
 use App\Models\User;
+use App\Models\ItemUser;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class ItemPolicy
@@ -55,5 +56,18 @@ class ItemPolicy
         }
 
         return false;
+    }
+
+    public function bid(User $user, Item $item)
+    {
+        // You can not bid for your own item.
+        if ($item->user->id === $user->id) return false;
+     
+        $item_user = ItemUser::where('item_id', $item->id)
+                             ->where('user_id', $user->id)
+                             ->first();
+
+        // Will return true if we have not bidden yet.
+        return is_null($item_user);
     }
 }

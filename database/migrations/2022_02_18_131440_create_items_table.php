@@ -30,8 +30,8 @@ class CreateItemsTable extends Migration
 
             $table->string('name');
             $table->text('description');
-            $table->decimal('starting_price', 10, 2);
-            $table->decimal('final_price', 10, 2)->nullable();
+            $table->integer('starting_price');
+            $table->integer('final_price')->nullable();
             $table->string('payment_method')->nullable();
             $table->string('delivery_method');
             $table->string('status')->default('active');
