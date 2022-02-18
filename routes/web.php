@@ -20,7 +20,8 @@ use App\Http\Controllers\UserController;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::resource('users', UserController::class)->only(['edit', 'update']);
-Route::post('/items/{item}/cancel', [ItemController::class, 'cancel'])->name('items.cancel');
+Route::post('/items/{item}/cancel-item', [ItemController::class, 'cancel_item'])->name('items.cancel_item');
+Route::post('/items/{item}/cancel-bid', [ItemController::class, 'cancel_bid'])->name('items.cancel_bid');
 Route::post('/items/{item}/bid', [ItemController::class, 'bid'])->name('items.bid');
 Route::resource('items', ItemController::class)->only(['create', 'store', 'show']);
 

@@ -76,7 +76,7 @@ class ItemController extends Controller
         ]);
     }
 
-    public function cancel(Item $item)
+    public function cancel_item(Item $item)
     {
         $this->authorize($item);
 
@@ -103,5 +103,20 @@ class ItemController extends Controller
 
         return redirect()->back()
                          ->withStatus('You have bidden for this item!');
+    }
+
+    public function cancel_bid(Item $item)
+    {
+        $this->authorize($item);
+        
+        $item_user = ItemUser::where('item_id', $item->id)
+                             ->where('user_id', Auth::user()->id)
+                             ->first();
+
+        $item_user->status = 'canceled';
+        $item_user->save();
+
+        return redirect()->back()
+                         ->withStatus("You have canceled your bid for item '{$item_user->item->name}'");
     }
 }
