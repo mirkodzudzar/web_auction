@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Item;
 use App\Models\User;
 use App\Http\Requests\UpdateUser;
 use Illuminate\Support\Facades\Hash;
@@ -37,5 +38,14 @@ class UserController extends Controller
 
         return redirect()->back()
                          ->withStatus('Your profile has been updated.');
+    }
+
+    public function items_all(User $user)
+    {
+        $items = Item::where('user_id', $user->id)->get();
+
+        return view('users.items.index', [
+            'items' => $items,
+        ]);
     }
 }

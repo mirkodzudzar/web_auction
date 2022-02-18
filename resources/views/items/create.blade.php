@@ -1,6 +1,8 @@
 @extends('layout')
 
 @section('content')
+  @section('page_title', 'Publish new item')
+
   <form action="{{ route('items.store') }}" method="POST" enctype="multipart/form-data">
     @csrf
     @if($errors->any())

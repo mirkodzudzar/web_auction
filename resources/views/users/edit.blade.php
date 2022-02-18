@@ -1,6 +1,7 @@
 @extends('layout')
 
 @section('content')
+  @section('page_title', "Edit your profile")
   <form action="{{ route('users.update', ['user' => Auth::user()->id]) }}" method="POST">
     @csrf
     @method('PUT')

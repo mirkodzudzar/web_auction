@@ -1,6 +1,7 @@
 @extends('layout')
 
 @section('content')
+  @section('page_title', 'Register')
   <form action="{{ route('register') }}" method="POST">
     @csrf
     @if($errors->any())

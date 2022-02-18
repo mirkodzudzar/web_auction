@@ -1,8 +1,9 @@
 @extends('layout')
 
 @section('content')
+  @section('page_title', $item->name)
+  
   <div>
-    <h1>{{ $item->name }}</h1>
     @if ($item->image)
       <img src="{{ $item->image->url() }}">
     @endif
@@ -31,7 +32,9 @@
         </form>
       </div>
     @else
-      <p>You have canceled your bid already!</p>
+      @if ($item->user->id !== Auth::user()->id)
+        <p>You have canceled your bid already!</p>
+      @endif
     @endcan
 
     @guest

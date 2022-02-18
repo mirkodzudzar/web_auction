@@ -1,8 +1,7 @@
 @extends('layout')
 
 @section('content')
-  @section('page_title', 'Web auction')
-
+  @section('page_title', 'List of all your items')
   @foreach ($items as $item)
     <div>
       @if ($item->image)
