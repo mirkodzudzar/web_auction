@@ -9,7 +9,7 @@
       <p>
         <a href="{{ route('items.show', ['item' => $item->id]) }}">{{ $item->name }}</a>
       </p>
-      <p>Starting price: {{ $item->starting_price }} RSD</p>
+      <p>{{ $item->starting_price }} RSD</p>
       <hr>
     </div>
   @endforeach

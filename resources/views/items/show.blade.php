@@ -7,7 +7,7 @@
       <img src="{{ $item->image->url() }}">
     @endif
     <p>{{ $item->description }}</p>
-    <p>Starting price: {{ $item->starting_price }}</p>
+    <p>Starting price: {{ $item->starting_price }} RSD</p>
     @if($errors->any())
       {!! implode('', $errors->all('<div>:message</div>')) !!}
     @endif
@@ -24,7 +24,7 @@
       </form>
     @elsecan('cancel_bid', $item)
       <div>
-        <p>Your price: {{ $item->bid_users()->where('user_id', Auth::user()->id)->first()->pivot->price }}</p>
+        <p>Your price: {{ $item->bid_users()->where('user_id', Auth::user()->id)->first()->pivot->price }} RSD</p>
         <form action="{{ route('items.cancel_bid', ['item' => $item->id]) }}" method="POST">
           @csrf
           <button type="submit">Cancel your bid</button>
