@@ -1,7 +1,7 @@
 @extends('layout')
 
 @section('content')
-  <form action="{{ route('items.store') }}" method="POST">
+  <form action="{{ route('items.store') }}" method="POST" enctype="multipart/form-data">
     @csrf
     @if($errors->any())
       {!! implode('', $errors->all('<div>:message</div>')) !!}
@@ -26,6 +26,10 @@
     <div>
       <label for="delivery_method">Delivery method *</label>
       <input type="text" name="delivery_method" id="delivery_method" value="{{ old('delivery_method') }}" required>
+    </div>
+    <div>
+      <label for="image">Image</label>
+      <input type="file" name="image" id="image">
     </div>
 
     <button type="submit">Publish item</button>

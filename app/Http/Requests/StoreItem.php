@@ -29,6 +29,7 @@ class StoreItem extends FormRequest
             'starting_price' => 'required|numeric',
             'payment_method' => 'nullable|string|max:255',
             'delivery_method' => 'required|string|max:255',
+            'image' => 'nullable|image|mimes:png,jpg,jpeg,gif,svg|max:2048',
         ];
     }
 }

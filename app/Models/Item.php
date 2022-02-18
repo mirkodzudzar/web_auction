@@ -32,4 +32,9 @@ class Item extends Model
         return $this->belongsToMany(User::class)
                     ->withPivot(['price', 'status']);
     }
+
+    public function image()
+    {
+        return $this->hasOne(Image::class);
+    }
 }

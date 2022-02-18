@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Item;
 use App\Models\User;
-use App\Http\Requests\StoreItem;
+use App\Models\Image;
 use App\Models\ItemUser;
+use App\Http\Requests\StoreItem;
 use Illuminate\Support\Facades\Auth;
 
 class ItemController extends Controller
@@ -41,7 +42,15 @@ class ItemController extends Controller
         $validated = $request->validated();
 
         $user = User::findOrFail(Auth::user()->id);
-        $user->items()->create($validated);
+        $item = $user->items()->create($validated);
+        
+        // Image file is optional.
+        if (isset($validated['image'])) {
+            $path = $validated['image']->store('images');
+            $item->image()->save(
+                Image::make(['path' => $path])
+            );
+        }
 
         return redirect()->back()
                          ->withStatus("You have published new item!");

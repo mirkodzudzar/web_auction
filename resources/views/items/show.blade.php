@@ -3,6 +3,9 @@
 @section('content')
   <div>
     <h1>{{ $item->name }}</h1>
+    @if ($item->image)
+      <img src="{{ $item->image->url() }}" style="width: 50%">
+    @endif
     <p>{{ $item->description }}</p>
     <p>Starting price: {{ $item->starting_price }}</p>
     @if($errors->any())
@@ -29,7 +32,7 @@
       <p>Payment method: {{ $item->payment_method }}</p>
     @endif
     <p>Delivery method: {{ $item->delivery_method }}</p>
-    <p>Deatline for buying is: {{ $item->expires_at }}</p>
+    <p>Deadline for buying is: {{ $item->expires_at }}</p>
     <i>User: {{ $item->user->email }}</i>
     @can('cancel', $item)
       <form action="{{ route('items.cancel', ['item' => $item->id]) }}" method="POST">
