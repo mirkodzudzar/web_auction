@@ -23,7 +23,7 @@ Route::group([
     'middleware' => ['auth'],
 ], function() {
     Route::resource('users', UserController::class)->only(['edit', 'update']);
-    Route::resource('items', ItemController::class)->only(['create', 'store']);
+    Route::resource('items', ItemController::class)->only(['create', 'store', 'show']);
 });
 
 Auth::routes(['reset' => false]);

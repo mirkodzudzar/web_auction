@@ -27,7 +27,7 @@ class ItemController extends Controller
      */
     public function create()
     {
-        return view('users.items.create');
+        return view('items.create');
     }
 
     /**
@@ -55,7 +55,9 @@ class ItemController extends Controller
      */
     public function show(Item $item)
     {
-        //
+        return view('items.show', [
+            'item' => $item,
+        ]);
     }
 
     /**
