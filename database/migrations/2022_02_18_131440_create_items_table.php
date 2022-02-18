@@ -35,7 +35,7 @@ class CreateItemsTable extends Migration
             $table->string('payment_method')->nullable();
             $table->string('delivery_method');
             $table->string('status')->default('active');
-            $table->timestamp('expires_at')->default(Carbon::now()->addDays(10));
+            $table->timestamp('expires_at');
             $table->timestamps();
         });
     }

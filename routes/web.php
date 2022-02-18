@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ItemController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -19,6 +20,11 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::resource('users', UserController::class)->only(['edit', 'update']);
+Route::group([
+    'middleware' => ['auth'],
+], function() {
+    Route::resource('users', UserController::class)->only(['edit', 'update']);
+    Route::resource('items', ItemController::class)->only(['create', 'store']);
+});
 
 Auth::routes(['reset' => false]);
