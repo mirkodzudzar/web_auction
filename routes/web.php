@@ -23,6 +23,7 @@ Route::group([
     'middleware' => ['auth'],
 ], function() {
     Route::resource('users', UserController::class)->only(['edit', 'update']);
+    Route::post('/items/{item}/cancel', [ItemController::class, 'cancel'])->name('items.cancel');
     Route::resource('items', ItemController::class)->only(['create', 'store', 'show']);
 });
 

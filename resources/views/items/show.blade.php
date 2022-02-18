@@ -11,6 +11,13 @@
     <p>Delivery method: {{ $item->delivery_method }}</p>
     <p>Deatline for buying is: {{ $item->expires_at }}</p>
     <i>User: {{ $item->user->email }}</i>
-    <hr>
+    @can('cancel', $item)
+      <form action="{{ route('items.cancel', ['item' => $item->id]) }}" method="POST">
+        @csrf
+        <button type="submit">Cancel item</button>
+      </form>
+    @else
+      <p>Status: {{ $item->status }}</p>
+    @endcan
   </div>
 @endsection

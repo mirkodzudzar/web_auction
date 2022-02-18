@@ -55,42 +55,21 @@ class ItemController extends Controller
      */
     public function show(Item $item)
     {
+        $this->authorize($item);
+
         return view('items.show', [
             'item' => $item,
         ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Item  $item
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Item $item)
+    public function cancel(Item $item)
     {
-        //
-    }
+        $this->authorize($item);
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Item  $item
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Item $item)
-    {
-        //
-    }
+        $item->status = 'canceled';
+        $item->save();
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Item  $item
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Item $item)
-    {
-        //
+        return redirect()->back()
+                         ->withStatus("You have canceled your item '{$item->name}'");
     }
 }
