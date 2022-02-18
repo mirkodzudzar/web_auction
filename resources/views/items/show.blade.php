@@ -4,7 +4,7 @@
   <div>
     <h1>{{ $item->name }}</h1>
     @if ($item->image)
-      <img src="{{ $item->image->url() }}" style="width: 50%">
+      <img src="{{ $item->image->url() }}">
     @endif
     <p>{{ $item->description }}</p>
     <p>Starting price: {{ $item->starting_price }}</p>
@@ -23,9 +23,13 @@
         </div>
       </form>
     @else
-      @if (Auth::user()->id !== $item->user->id)
-        <p>Your price: {{ $item->bid_users()->where('user_id', Auth::user()->id)->first()->pivot->price }}</p>
-      @endif
+      @auth
+        @if (Auth::user()->id !== $item->user->id)
+          <p>Your price: {{ $item->bid_users()->where('user_id', Auth::user()->id)->first()->pivot->price }}</p>
+        @endif
+      @else
+        <a href="{{ route('login') }}">Login to bid</a>
+      @endauth
     @endcan
 
     @if ($item->payment_method)

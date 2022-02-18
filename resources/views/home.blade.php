@@ -4,7 +4,7 @@
   @foreach ($items as $item)
     <div>
       @if ($item->image)
-        <img src="{{ $item->image->url() }}" style="width: 25%">
+        <img src="{{ $item->image->url() }}">
       @endif
       <p>
         <a href="{{ route('items.show', ['item' => $item->id]) }}">{{ $item->name }}</a>

@@ -24,14 +24,18 @@ class ItemPolicy
 
     /**
      * Determine whether the user can view the model.
+     * ?User means that when there is a quest user, it will be able to view item page.
      *
      * @param  \App\Models\User  $user
      * @param  \App\Models\Item  $item
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user, Item $item)
+    public function view(?User $user, Item $item)
     {
         if ($item->status !== 'active') {
+            // If we are guest, we can not visit item that is not active.
+            if(is_null($user)) return false;
+
             return $user->id === $item->user->id;
         }
 
