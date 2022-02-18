@@ -12,6 +12,7 @@
           <a href="{{ route('login') }}">Login</a>
           <a href="{{ route('register') }}">Register</a>
         @else
+          <a href="{{ route('users.edit', ['user' => Auth::user()->id]) }}">Edit profile</a>
           <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit()">Logout</a>
           <form action="{{ route('logout') }}" id="logout-form" method="POST" style="display: none">
             @csrf
@@ -19,6 +20,11 @@
         @endguest
       </div>
       <div>
+        @if (session('status'))
+          <div>
+            {{ session('status') }}
+          </div>
+        @endif
         @yield('content')
       </div>
     </body>
