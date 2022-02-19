@@ -80,11 +80,15 @@ class ItemPolicy
         // You can not cancel bid for your own item.
         if ($item->user->id === $user->id) return false;
 
-        $item_user = ItemUser::where('item_id', $item->id)
+        if ($item->status === 'active') {
+            $item_user = ItemUser::where('item_id', $item->id)
                              ->where('user_id', $user->id)
                              ->where('status', 'active')
                              ->first();
-        // Will return true if we have bidden already.
-        return isset($item_user);
+            // Will return true if we have bidden already.
+            return isset($item_user);
+        }
+
+        return false;
     }
 }

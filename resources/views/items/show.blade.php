@@ -32,9 +32,11 @@
         </form>
       </div>
     @else
-      @if ($item->user->id !== Auth::user()->id)
-        <p>You have canceled your bid already!</p>
-      @endif
+      @auth
+        @if ($item->user->id !== Auth::user()->id)
+          <p>You have canceled your bid already!</p>
+        @endif
+      @endauth
     @endcan
 
     @guest
@@ -55,9 +57,11 @@
         <button type="submit">Cancel item</button>
       </form>
     @endcan
-    @if ($item->user->id === Auth::user()->id)
-      <p>Status: {{ $item->status }}</p>
-    @endif
+    @auth
+      @if ($item->user->id === Auth::user()->id)
+        <p>Status: {{ $item->status }}</p>
+      @endif
+    @endauth
   </div>
   @auth
     @if ($item->user->id === Auth::user()->id)
@@ -74,7 +78,7 @@
             @endphp
             @if (isset($item_user))
               <li>
-                {{ $bid_user->full_name }},
+                <a href="{{ route('users.items.index', ['user' => $bid_user->id]) }}">{{ $bid_user->full_name }}</a>,
                 {{ $bid_user->bid_items()->where('item_id', $item->id)->first()->pivot->price }} RSD
                 @if ($item->status === 'sold' && $item->buyer->id === $bid_user->id)
                   - bought this item!
