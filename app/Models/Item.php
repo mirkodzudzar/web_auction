@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Laravel\Scout\Searchable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Item extends Model
 {
-    use HasFactory;
+    use HasFactory,
+        Searchable;
 
     protected $fillable = [
         'name',
@@ -16,6 +18,19 @@ class Item extends Model
         'payment_method',
         'delivery_method',
     ];
+
+    /**
+     * Only name and description, payment and delivery methodes will be searchable for items,
+     * first_name, last_name and email will be searchable for item related user,
+     * and even full_name that we are getting as a concatenation of two fields...
+     */
+    public function toSearchableArray()
+    {
+        $searchable_item = $this->only('name', 'description', 'payment_method', 'delivery_method');
+        $searchable_related_user = $this->user->only('full_name', 'first_name', 'last_name', 'email');
+
+        return array_merge($searchable_item, $searchable_related_user);
+    }
 
     public function user()
     {

@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Image;
 use App\Models\ItemUser;
 use App\Http\Requests\StoreItem;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class ItemController extends Controller
@@ -21,14 +22,23 @@ class ItemController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $items = Item::where('status', 'active')
-                     ->with('image')
-                     ->get();
+        if ($request->has('search')) {
+            $result = $request->input('search');
+            $items = Item::search($result)
+                         ->where('status', 'active')
+                        //  ->with('image') // not availabe
+                         ->get();
+        } else {
+            $items = Item::where('status', 'active')
+                         ->with('image')
+                         ->get();
+        }
 
         return view('items.index', [
             'items' => $items,
+            'result' => $result ?? null,
         ]);
     }
 
