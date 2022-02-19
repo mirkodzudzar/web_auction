@@ -48,8 +48,9 @@ class ItemCron extends Command
         $highest_price = 0;
         foreach($items as $item)
         {
-            $item_users = ItemUser::where('item_id', $item->id)->where('status', 'active')->get();
-            // dump($item_users->count());
+            // Order by date of creation to start from oldest bids.
+            // In case that there are multiple highest prices that are equeal, first user that bid will be used as a buyer.
+            $item_users = ItemUser::where('item_id', $item->id)->where('status', 'active')->orderBy('created_at', 'ASC')->get();
             if (count($item_users) === 0) {
                 // There is no buyer for this item.
                 $item->status = 'expired';

@@ -15,6 +15,7 @@
           <a href="{{ route('users.edit', ['user' => Auth::user()->id]) }}">Edit profile</a>
           <a href="{{ route('items.create') }}">Add item</a>
           <a href="{{ route('users.items.index', ['user' => Auth::user()->id]) }}">Your items</a>
+          <a href="{{ route('users.items.buyed', ['user' => Auth::user()->id]) }}">Buyed items</a>
           <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit()">Logout</a>
           <form action="{{ route('logout') }}" id="logout-form" method="POST" style="display: none">
             @csrf

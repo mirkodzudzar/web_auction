@@ -49,4 +49,16 @@ class UserController extends Controller
             'items' => $items,
         ]);
     }
+
+    public function items_buyed(User $user)
+    {
+        $this->authorize($user);
+
+        $items = Item::where('buyer_id', $user->id)->where('status', 'sold')->get();
+
+        return view('users.items.buyed', [
+            'user' => $user,
+            'items' => $items,
+        ]);
+    }
 }
