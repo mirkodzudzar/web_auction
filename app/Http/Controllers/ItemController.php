@@ -107,8 +107,7 @@ class ItemController extends Controller
     {
         $this->authorize($item);
 
-        // @TODO e.g number 123 still can pass as 123.01 and be saved as 123 which is same as starting_price - not greater!
-        $rules['price'] = "required|numeric|gt:{$item->starting_price}";
+        $rules['price'] = "required|integer|gt:{$item->starting_price}";
         $validated = request()->validate($rules);
 
         ItemUser::create([
