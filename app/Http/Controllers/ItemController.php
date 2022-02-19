@@ -13,7 +13,7 @@ class ItemController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['auth'])->except(['show']);
+        $this->middleware(['auth'])->except(['index', 'show']);
     }
 
     /**
@@ -23,7 +23,13 @@ class ItemController extends Controller
      */
     public function index()
     {
-        //
+        $items = Item::where('status', 'active')
+                     ->with('user')
+                     ->get();
+
+        return view('items.index', [
+            'items' => $items,
+        ]);
     }
 
     /**
