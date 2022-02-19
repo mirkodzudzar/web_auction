@@ -22,13 +22,15 @@
       <input type="text" name="starting_price" id="starting_price" value="{{ old('starting_price') }}" required>
     </div>
     <div>
-      <label for="payment_method">Payment method</label>
-      <input type="text" name="payment_method" id="payment_method" value="{{ old('payment_method') }}">
+      <label>Payment method(s)</label><br>
+      @foreach ($payments as $payment)
+        <input type="checkbox" value="{{ $payment->id }}" name="payments[]" {{ collect(old('payments'))->contains($payment->id) ? 'checked' : '' }}>{{ $payment->name }}<br>
+      @endforeach
     </div>
     <div>
-      <label>Delivery method *</label><br>
+      <label>Delivery method(s) *</label><br>
       @foreach ($deliveries as $delivery)
-        <input type="checkbox" value="{{ $delivery->id }}" name="deliveries[]">{{ $delivery->name }}<br>
+        <input type="checkbox" value="{{ $delivery->id }}" name="deliveries[]" {{ collect(old('deliveries'))->contains($delivery->id) ? 'checked' : '' }}>{{ $delivery->name }}<br>
       @endforeach
     </div>
     <div>

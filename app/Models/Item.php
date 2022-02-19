@@ -57,4 +57,9 @@ class Item extends Model
     {
         return $this->belongsToMany(Delivery::class);
     }
+
+    public function payments()
+    {
+        return $this->belongsToMany(Payment::class);
+    }
 }

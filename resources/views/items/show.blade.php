@@ -43,9 +43,14 @@
       <a href="{{ route('login') }}">Login to bid</a>
     @endguest
 
-    @if ($item->payment_method)
-      <p>Payment method: {{ $item->payment_method }}</p>
+    @if ($item->payments->count() > 0)
+      <p>Payment method(s): 
+        @foreach ($item->payments as $payment)
+          {{ $payment->name }}{{ $loop->last ? '' : ', ' }}
+        @endforeach  
+      </p>
     @endif
+
     <p>Delivery method(s):
       @foreach ($item->deliveries as $delivery)
         {{ $delivery->name }}{{ $loop->last ? '' : ', ' }}
@@ -81,28 +86,30 @@
     @if ($item->user->id === Auth::user()->id)
       <div>
         <h3>Users that bid for this item</h3>
-        <ul>
-          @forelse ($item->bid_users as $bid_user)
-            {{-- Only active bids will be displayed. --}}
-            @php
-              $item_user = App\Models\ItemUser::where('item_id', $item->id)
-                                              ->where('user_id', $bid_user->id)
-                                              ->where('status', 'active')
-                                              ->first();
-            @endphp
-            @if (isset($item_user))
-              <li>
-                <a href="{{ route('users.items.index', ['user' => $bid_user->id]) }}">{{ $bid_user->full_name }}</a>,
-                {{ $bid_user->bid_items()->where('item_id', $item->id)->first()->pivot->price }} RSD
-                @if ($item->status === 'sold' && $item->buyer->id === $bid_user->id)
-                  - bought this item!
-                @endif
-              </li>
-            @endif
-          @empty
-            <p>No users yet.</p>
-          @endforelse
-        </ul>
+        @if ($item->bid_users->count() > 0)
+          <ul>
+            @foreach ($item->bid_users as $bid_user)
+              {{-- Only active bids will be displayed. --}}
+              @php
+                $item_user = App\Models\ItemUser::where('item_id', $item->id)
+                                                ->where('user_id', $bid_user->id)
+                                                ->where('status', 'active')
+                                                ->first();
+              @endphp
+              @if (isset($item_user))
+                <li>
+                  <a href="{{ route('users.items.index', ['user' => $bid_user->id]) }}">{{ $bid_user->full_name }}</a>,
+                  {{ $bid_user->bid_items()->where('item_id', $item->id)->first()->pivot->price }} RSD
+                  @if ($item->status === 'sold' && $item->buyer->id === $bid_user->id)
+                    - bought this item!
+                  @endif
+                </li>
+              @endif
+            @endforeach
+          </ul>
+        @else
+          <p>No users yet.</p>
+        @endif
       </div>
     @endif
   @endauth

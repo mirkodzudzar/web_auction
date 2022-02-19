@@ -8,6 +8,7 @@ use App\Models\Image;
 use App\Models\ItemUser;
 use App\Http\Requests\StoreItem;
 use App\Models\Delivery;
+use App\Models\Payment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -51,9 +52,11 @@ class ItemController extends Controller
     public function create()
     {
         $deliveries = Delivery::all();
+        $payments = Payment::all();
 
         return view('items.create', [
             'deliveries' => $deliveries,
+            'payments' => $payments,
         ]);
     }
 
@@ -69,9 +72,16 @@ class ItemController extends Controller
 
         $user = User::findOrFail(Auth::user()->id);
         $item = $user->items()->create($validated);
+        
+        // Payments are optional.
+        if (isset($validated['payments'])) {
+            // Save payments for this item.
+            $item->payments()->sync($validated['payments']);
+        }
+        
         // Save deliveries for this item.
         $item->deliveries()->sync($validated['deliveries']);
-        
+
         // Image file is optional.
         if (isset($validated['image'])) {
             $path = $validated['image']->store('images');

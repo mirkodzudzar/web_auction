@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateDeliveryItemTable extends Migration
+class CreateItemPaymentTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,24 +13,24 @@ class CreateDeliveryItemTable extends Migration
      */
     public function up()
     {
-        Schema::create('delivery_item', function (Blueprint $table) {
+        Schema::create('item_payment', function (Blueprint $table) {
             $table->id();
-
-            $table->unsignedBigInteger('delivery_id');
-            $table->foreign('delivery_id')
-                  ->references('id')
-                  ->on('deliveries');
 
             $table->unsignedBigInteger('item_id');
             $table->foreign('item_id')
+                  ->references('id')
+                  ->on('items');
+
+            $table->unsignedBigInteger('payment_id');
+            $table->foreign('payment_id')
                 ->references('id')
-                ->on('items');
+                ->on('payments');
 
             $table->timestamps();
         });
 
         Schema::table('items', function (Blueprint $table) {
-            $table->dropColumn('delivery_method');
+            $table->dropColumn('payment_method');
         });
     }
 
@@ -41,11 +41,11 @@ class CreateDeliveryItemTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('delivery_item');
+        Schema::dropIfExists('item_payment');
 
         if (Schema::hasTable('items')) {
             Schema::table('items', function (Blueprint $table) {
-                $table->string('delivery_method')->after('final_price');
+                $table->string('payment_method')->nullable()->after('final_price');
             });
         }
     }
