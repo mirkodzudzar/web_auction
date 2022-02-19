@@ -15,16 +15,6 @@
   </form>
 
   @foreach ($items as $item)
-    <div>
-      @if ($item->image)
-        <img src="{{ $item->image->url() }}">
-      @endif
-      <p>
-        <a href="{{ route('items.show', ['item' => $item->id]) }}">{{ $item->name }}</a>
-      </p>
-      <p>{{ $item->starting_price }} RSD</p>
-      <p>{{ $item->bid_users->count() }} bid(s)</p>
-      <hr>
-    </div>
+    <x-item-card :item="$item"></x-item-card>
   @endforeach
 @endsection
