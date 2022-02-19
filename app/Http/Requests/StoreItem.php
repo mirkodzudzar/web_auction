@@ -26,7 +26,7 @@ class StoreItem extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'description' => 'required|string|max:255',
-            'starting_price' => 'required|numeric',
+            'starting_price' => 'required|integer',
             'payment_method' => 'nullable|string|max:255',
             'delivery_method' => 'required|string|max:255',
             'image' => 'nullable|image|mimes:png,jpg,jpeg,gif,svg|max:2048',
