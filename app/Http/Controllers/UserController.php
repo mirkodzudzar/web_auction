@@ -44,6 +44,7 @@ class UserController extends Controller
     {
         $items = Item::where('user_id', $user->id)
                      ->where('status', 'active')
+                     ->withCount('bid_users')
                      ->with('image')
                      ->get();
 
@@ -59,6 +60,7 @@ class UserController extends Controller
 
         $items = Item::where('buyer_id', $user->id)
                      ->where('status', 'sold')
+                     ->withCount('bid_users')
                      ->with('image')
                      ->get();
 
@@ -74,6 +76,7 @@ class UserController extends Controller
 
         $items = Item::where('user_id', $user->id)
                      ->where('status', 'sold')
+                     ->withCount('bid_users')
                      ->with('image')
                      ->get();
 
