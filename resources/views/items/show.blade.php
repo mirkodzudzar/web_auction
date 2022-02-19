@@ -52,8 +52,35 @@
         @csrf
         <button type="submit">Cancel item</button>
       </form>
-    @else
-      <p>Status: {{ $item->status }}</p>
     @endcan
+    @if ($item->user->id === Auth::user()->id)
+      <p>Status: {{ $item->status }}</p>
+    @endif
   </div>
+  @auth
+    @if ($item->user->id === Auth::user()->id)
+      <div>
+        <h3>Users that already bid for this item</h3>
+        <ul>
+          @forelse ($item->bid_users as $bid_user)
+            {{-- Only active bids will be displayed. --}}
+            @php
+              $item_user = App\Models\ItemUser::where('item_id', $item->id)
+                                              ->where('user_id', $bid_user->id)
+                                              ->where('status', 'active')
+                                              ->first();
+            @endphp
+            @if (isset($item_user))
+              <li>
+                {{ $bid_user->full_name }},
+                {{ $bid_user->bid_items()->where('item_id', $item->id)->first()->pivot->price }} RSD
+              </li>
+            @endif
+          @empty
+            <p>No users yet.</p>
+          @endforelse
+        </ul>
+      </div>
+    @endif
+  @endauth
 @endsection
