@@ -90,7 +90,7 @@ class ItemController extends Controller
             );
         }
 
-        return redirect()->back()
+        return redirect()->route('items.show', ['item' => $item->id])
                          ->withStatus("You have published new item!");
     }
 

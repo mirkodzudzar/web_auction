@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Scopes\NewestScope;
 use Laravel\Scout\Searchable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -61,5 +62,12 @@ class Item extends Model
     public function payments()
     {
         return $this->belongsToMany(Payment::class);
+    }
+
+    public static function boot()
+    {
+        static::addGlobalScope(new NewestScope);
+
+        parent::boot();
     }
 }
