@@ -10,6 +10,6 @@
     @endif
   </p>
   <p>{{ $item->starting_price }} RSD</p>
-  <p>{{ $item->bid_users->count() }} bid(s)</p>
+  <p>{{ $item->bid_users_count }} bid(s)</p>
   <hr>
 </div>

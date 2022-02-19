@@ -28,13 +28,18 @@ class ItemController extends Controller
     {
         if ($request->has('search')) {
             $result = $request->input('search');
-            $items = Item::search($result)
+            // First we are getting all ids, with(), withCount() are not awailable while searching...
+            $item_ids = Item::search($result)->get()->pluck('id');
+
+            $items = Item::whereIn('id', $item_ids)
                          ->where('status', 'active')
-                        //  ->with('image') // not availabe
+                         ->with('image') 
+                         ->withCount('bid_users')
                          ->get();
         } else {
             $items = Item::where('status', 'active')
                          ->with('image')
+                         ->withCount('bid_users')
                          ->get();
         }
 
