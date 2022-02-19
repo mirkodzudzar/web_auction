@@ -34,7 +34,7 @@ class CreateItemsTable extends Migration
             $table->integer('final_price')->nullable();
             $table->string('payment_method')->nullable();
             $table->string('delivery_method');
-            $table->string('status')->default('active');
+            $table->string('status')->default('active'); // active, canceled, sold, expired
             $table->timestamp('expires_at');
             $table->timestamps();
         });

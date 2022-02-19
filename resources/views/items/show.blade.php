@@ -46,7 +46,9 @@
     @endif
     <p>Delivery method: {{ $item->delivery_method }}</p>
     <p>Deadline for buying is: {{ $item->expires_at }}</p>
-    <i>User: {{ $item->user->email }}</i>
+    <p>
+      <a href="{{ route('users.items.index', ['user' => $item->user->id]) }}">{{ $item->user->full_name }}</a>
+    </p>
     @can('cancel_item', $item)
       <form action="{{ route('items.cancel_item', ['item' => $item->id]) }}" method="POST">
         @csrf

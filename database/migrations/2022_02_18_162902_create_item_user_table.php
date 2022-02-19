@@ -27,7 +27,7 @@ class CreateItemUserTable extends Migration
                 ->on('users');
 
             $table->integer('price');
-            $table->string('status')->default('active');
+            $table->string('status')->default('active'); // active or canceled
 
             $table->timestamps();
         });

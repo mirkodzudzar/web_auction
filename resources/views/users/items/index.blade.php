@@ -1,8 +1,8 @@
 @extends('layout')
 
 @section('content')
-  @section('page_title', 'List of all your items')
-  @foreach ($items as $item)
+  @section('page_title', "All items of a user $user->full_name")
+  @forelse ($items as $item)
     <div>
       @if ($item->image)
         <img src="{{ $item->image->url() }}">
@@ -13,5 +13,7 @@
       <p>{{ $item->starting_price }} RSD</p>
       <hr>
     </div>
-  @endforeach
+  @empty
+    <p>No items yet.</p>
+  @endforelse
 @endsection

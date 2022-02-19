@@ -40,11 +40,12 @@ class UserController extends Controller
                          ->withStatus('Your profile has been updated.');
     }
 
-    public function items_all(User $user)
+    public function items_index(User $user)
     {
-        $items = Item::where('user_id', $user->id)->get();
+        $items = Item::where('user_id', $user->id)->where('status', 'active')->get();
 
         return view('users.items.index', [
+            'user' => $user,
             'items' => $items,
         ]);
     }

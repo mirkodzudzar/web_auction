@@ -45,7 +45,8 @@ class User extends Authenticatable
 
     public function getFullNameAttribute()
     {
-        return ucfirst(strtolower($this->first_name)) . " " . ucfirst(strtolower($this->last_name));
+        // Each word will start upper.
+        return ucwords(strtolower($this->first_name . " " . $this->last_name));
     }
 
     public function items()
