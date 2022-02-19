@@ -47,7 +47,22 @@
       <p>Payment method: {{ $item->payment_method }}</p>
     @endif
     <p>Delivery method: {{ $item->delivery_method }}</p>
-    <p>Deadline for buying is: {{ $item->expires_at }}</p>
+
+    @if ($item->status === 'active')
+      @php
+        $days = \Carbon\Carbon::parse($item->expires_at)->diffInDays(\Carbon\Carbon::now());
+        $hours = \Carbon\Carbon::parse($item->expires_at)->diffInHours(\Carbon\Carbon::now());
+        $minutes = \Carbon\Carbon::parse($item->expires_at)->diffInMinutes(\Carbon\Carbon::now());
+      @endphp
+      <p>Auction will end in: {{ $days !== 0 ? "$days day(s)" : ($hours !== 0 ? "$hours hour(s)" : "$minutes minute(s)") }}</p>
+    @else
+      @auth
+        @if ($item->user->id === Auth::user()->id)
+          <p>Status: {{ $item->status }}</p>
+        @endif
+      @endauth
+    @endif
+
     <p>
       <a href="{{ route('users.items.index', ['user' => $item->user->id]) }}">{{ $item->user->full_name }}</a>
     </p>
@@ -57,11 +72,6 @@
         <button type="submit">Cancel item</button>
       </form>
     @endcan
-    @auth
-      @if ($item->user->id === Auth::user()->id)
-        <p>Status: {{ $item->status }}</p>
-      @endif
-    @endauth
   </div>
   @auth
     @if ($item->user->id === Auth::user()->id)
