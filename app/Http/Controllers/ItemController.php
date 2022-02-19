@@ -24,7 +24,7 @@ class ItemController extends Controller
     public function index()
     {
         $items = Item::where('status', 'active')
-                     ->with('user')
+                     ->with('image')
                      ->get();
 
         return view('items.index', [

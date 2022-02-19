@@ -2,7 +2,7 @@
 
 @section('content')
   @section('page_title', "Edit your profile")
-  <form action="{{ route('users.update', ['user' => Auth::user()->id]) }}" method="POST">
+  <form action="{{ route('users.update', ['user' => $user->id]) }}" method="POST">
     @csrf
     @method('PUT')
     @if($errors->any())

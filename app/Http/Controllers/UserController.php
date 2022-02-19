@@ -42,7 +42,10 @@ class UserController extends Controller
 
     public function items_index(User $user)
     {
-        $items = Item::where('user_id', $user->id)->where('status', 'active')->get();
+        $items = Item::where('user_id', $user->id)
+                     ->where('status', 'active')
+                     ->with('image')
+                     ->get();
 
         return view('users.items.index', [
             'user' => $user,
@@ -54,7 +57,10 @@ class UserController extends Controller
     {
         $this->authorize($user);
 
-        $items = Item::where('buyer_id', $user->id)->where('status', 'sold')->get();
+        $items = Item::where('buyer_id', $user->id)
+                     ->where('status', 'sold')
+                     ->with('image')
+                     ->get();
 
         return view('users.items.buyed', [
             'user' => $user,
@@ -66,7 +72,10 @@ class UserController extends Controller
     {
         $this->authorize($user);
 
-        $items = Item::where('user_id', $user->id)->where('status', 'sold')->get();
+        $items = Item::where('user_id', $user->id)
+                     ->where('status', 'sold')
+                     ->with('image')
+                     ->get();
 
         return view('users.items.sold', [
             'user' => $user,
