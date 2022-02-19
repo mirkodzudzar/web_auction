@@ -62,7 +62,7 @@
   @auth
     @if ($item->user->id === Auth::user()->id)
       <div>
-        <h3>Users that already bid for this item</h3>
+        <h3>Users that bid for this item</h3>
         <ul>
           @forelse ($item->bid_users as $bid_user)
             {{-- Only active bids will be displayed. --}}
@@ -76,6 +76,9 @@
               <li>
                 {{ $bid_user->full_name }},
                 {{ $bid_user->bid_items()->where('item_id', $item->id)->first()->pivot->price }} RSD
+                @if ($item->status === 'sold' && $item->buyer->id === $bid_user->id)
+                  - bought this item!
+                @endif
               </li>
             @endif
           @empty

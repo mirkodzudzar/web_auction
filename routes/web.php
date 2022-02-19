@@ -21,6 +21,7 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get('users/{user}/items', [UserController::class, 'items_index'])->name('users.items.index');
 Route::get('users/{user}/items/buyed', [UserController::class, 'items_buyed'])->name('users.items.buyed');
+Route::get('users/{user}/items/sold', [UserController::class, 'items_sold'])->name('users.items.sold');
 Route::resource('users', UserController::class)->only(['edit', 'update']);
 Route::post('/items/{item}/cancel-item', [ItemController::class, 'cancel_item'])->name('items.cancel_item');
 Route::post('/items/{item}/cancel-bid', [ItemController::class, 'cancel_bid'])->name('items.cancel_bid');
