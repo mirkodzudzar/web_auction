@@ -26,8 +26,10 @@
       <input type="text" name="payment_method" id="payment_method" value="{{ old('payment_method') }}">
     </div>
     <div>
-      <label for="delivery_method">Delivery method *</label>
-      <input type="text" name="delivery_method" id="delivery_method" value="{{ old('delivery_method') }}" required>
+      <label>Delivery method *</label><br>
+      @foreach ($deliveries as $delivery)
+        <input type="checkbox" value="{{ $delivery->id }}" name="deliveries[]">{{ $delivery->name }}<br>
+      @endforeach
     </div>
     <div>
       <label for="image">Image</label>

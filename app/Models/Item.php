@@ -52,4 +52,9 @@ class Item extends Model
     {
         return $this->hasOne(Image::class);
     }
+
+    public function deliveries()
+    {
+        return $this->belongsToMany(Delivery::class);
+    }
 }

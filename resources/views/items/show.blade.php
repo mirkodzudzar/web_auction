@@ -46,7 +46,11 @@
     @if ($item->payment_method)
       <p>Payment method: {{ $item->payment_method }}</p>
     @endif
-    <p>Delivery method: {{ $item->delivery_method }}</p>
+    <p>Delivery method(s):
+      @foreach ($item->deliveries as $delivery)
+        {{ $delivery->name }}{{ $loop->last ? '' : ', ' }}
+      @endforeach
+    </p>
 
     @if ($item->status === 'active')
       @php

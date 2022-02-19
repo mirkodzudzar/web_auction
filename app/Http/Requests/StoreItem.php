@@ -28,7 +28,7 @@ class StoreItem extends FormRequest
             'description' => 'required|string|max:255',
             'starting_price' => 'required|integer',
             'payment_method' => 'nullable|string|max:255',
-            'delivery_method' => 'required|string|max:255',
+            'deliveries' => 'required|exists:deliveries,id',
             'image' => 'nullable|image|mimes:png,jpg,jpeg,gif,svg|max:2048',
         ];
     }
