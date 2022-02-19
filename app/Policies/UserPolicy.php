@@ -44,7 +44,7 @@ class UserPolicy
         return $user->id === $model->id;
     }
 
-    public function items_buyed(User $user, User $model)
+    public function items_bought(User $user, User $model)
     {
         return $user->id === $model->id;
     }

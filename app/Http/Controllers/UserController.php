@@ -53,7 +53,7 @@ class UserController extends Controller
         ]);
     }
 
-    public function items_buyed(User $user)
+    public function items_bought(User $user)
     {
         $this->authorize($user);
 
@@ -62,7 +62,7 @@ class UserController extends Controller
                      ->with('image')
                      ->get();
 
-        return view('users.items.buyed', [
+        return view('users.items.bought', [
             'user' => $user,
             'items' => $items,
         ]);

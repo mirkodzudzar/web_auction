@@ -19,7 +19,7 @@ use App\Http\Controllers\UserController;
 Route::get('/', [ItemController::class, 'index'])->name('items.index');
 
 Route::get('users/{user}/items', [UserController::class, 'items_index'])->name('users.items.index');
-Route::get('users/{user}/items/buyed', [UserController::class, 'items_buyed'])->name('users.items.buyed');
+Route::get('users/{user}/items/bought', [UserController::class, 'items_bought'])->name('users.items.bought');
 Route::get('users/{user}/items/sold', [UserController::class, 'items_sold'])->name('users.items.sold');
 Route::resource('users', UserController::class)->only(['edit', 'update']);
 
