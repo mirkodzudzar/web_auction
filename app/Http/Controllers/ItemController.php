@@ -17,7 +17,7 @@ class ItemController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['auth'])->except(['index', 'show']);
+        $this->middleware(['auth'])->except(['index', 'show', 'search']);
     }
 
     /**
@@ -25,28 +25,15 @@ class ItemController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
-        if ($request->has('search')) {
-            $result = $request->input('search');
-            // First we are getting all ids, with(), withCount() are not awailable while searching...
-            $item_ids = Item::search($result)->get()->pluck('id');
-
-            $items = Item::whereIn('id', $item_ids)
-                         ->where('status', 'active')
-                         ->with('image') 
-                         ->withCount('bid_users')
-                         ->get();
-        } else {
-            $items = Item::where('status', 'active')
-                         ->with('image')
-                         ->withCount('bid_users')
-                         ->get();
-        }
+        $items = Item::where('status', 'active')
+                     ->with('image')
+                     ->withCount('bid_users')
+                     ->get();
 
         return view('items.index', [
             'items' => $items,
-            'result' => $result ?? null,
         ]);
     }
 
@@ -160,5 +147,25 @@ class ItemController extends Controller
 
         return redirect()->back()
                          ->withStatus("You have canceled your bid for item '{$item_user->item->name}'");
+    }
+
+    public function search(Request $request)
+    {
+        if ($request->has('search')) {
+            $result = $request->input('search');
+            // First we are getting all ids, with(), withCount() are not awailable while searching...
+            $item_ids = Item::search($result)->get()->pluck('id');
+
+            $items = Item::whereIn('id', $item_ids)
+                         ->where('status', 'active')
+                         ->with('image') 
+                         ->withCount('bid_users')
+                         ->get();
+        }
+
+        return view('items.search', [
+            'items' => $items ?? null,
+            'result' => $result ?? null,
+        ]);
     }
 }

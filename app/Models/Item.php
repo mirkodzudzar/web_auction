@@ -21,16 +21,25 @@ class Item extends Model
     ];
 
     /**
-     * Only name and description, payment and delivery methodes will be searchable for items,
+     * Only name and description, payment and delivery will be searchable for items,
      * first_name, last_name and email will be searchable for item related user,
      * and even full_name that we are getting as a concatenation of two fields...
      */
     public function toSearchableArray()
     {
-        $searchable_item = $this->only('name', 'description', 'payment_method', 'delivery_method');
-        $searchable_related_user = $this->user->only('full_name', 'first_name', 'last_name', 'email');
+        $data['item'] = $this->only('name', 'description');
 
-        return array_merge($searchable_item, $searchable_related_user);
+        $data['item_payments'] = $this->payments->map(function ($data) {
+            return $data['name'];
+        })->toArray();
+
+        $data['item_deliveries'] = $this->deliveries->map(function ($data) {
+            return $data['name'];
+        })->toArray();
+        
+        $data['item_user'] = $this->user->only('full_name', 'first_name', 'last_name', 'email');
+
+        return $data;
     }
 
     public function user()

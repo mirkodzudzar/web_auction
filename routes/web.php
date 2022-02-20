@@ -27,6 +27,7 @@ Route::resource('users', UserController::class)->only(['edit', 'update']);
 Route::post('/items/{item}/cancel-item', [ItemController::class, 'cancel_item'])->name('items.cancel_item');
 Route::post('/items/{item}/cancel-bid', [ItemController::class, 'cancel_bid'])->name('items.cancel_bid');
 Route::post('/items/{item}/bid', [ItemController::class, 'bid'])->name('items.bid');
+Route::get('/items/search', [ItemController::class, 'search'])->name('items.search');
 Route::resource('items', ItemController::class)->only(['create', 'store', 'show']);
 
 Route::resource('categories', CategoryController::class)->only(['show']);

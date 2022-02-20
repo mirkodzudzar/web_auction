@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Http\ViewComposers\LayoutComposer;
 use App\Models\Item;
 use App\Observers\ItemObserver;
 use Illuminate\Support\ServiceProvider;
@@ -25,6 +26,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        view()->composer(['layout'], LayoutComposer::class);
+
         Item::observe(ItemObserver::class);
     }
 }
