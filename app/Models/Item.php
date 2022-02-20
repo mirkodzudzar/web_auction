@@ -56,12 +56,12 @@ class Item extends Model
 
     public function deliveries()
     {
-        return $this->belongsToMany(Delivery::class);
+        return $this->belongsToMany(Delivery::class)->withTimestamps();
     }
 
     public function payments()
     {
-        return $this->belongsToMany(Payment::class);
+        return $this->belongsToMany(Payment::class)->withTimestamps();
     }
 
     public function category()
