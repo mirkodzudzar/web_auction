@@ -3,11 +3,11 @@
     <img src="{{ $item->image->url() }}">
   @endif
   <p>
-    @if (isset($link) && $link === false)
-      {{ $item->name }}
-    @else
+    @can('view', $item)
       <a href="{{ route('items.show', ['item' => $item->id]) }}">{{ $item->name }}</a>
-    @endif
+    @else
+      {{ $item->name }}
+    @endcan
   </p>
   <p>{{ $item->starting_price }} RSD</p>
   <p>{{ $item->bid_users_count }} bid(s)</p>

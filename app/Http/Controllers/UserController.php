@@ -43,7 +43,6 @@ class UserController extends Controller
     public function items_index(User $user)
     {
         $items = Item::where('user_id', $user->id)
-                     ->where('status', 'active')
                      ->withCount('bid_users')
                      ->with('image')
                      ->get();
