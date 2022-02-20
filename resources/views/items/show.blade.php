@@ -72,6 +72,8 @@
       @endauth
     @endif
 
+    <p>Category: {{ $item->category->name }}</p>
+
     <p>
       <a href="{{ route('users.items.index', ['user' => $item->user->id]) }}">{{ $item->user->full_name }}</a>
     </p>

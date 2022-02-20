@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Image;
 use App\Models\ItemUser;
 use App\Http\Requests\StoreItem;
+use App\Models\Category;
 use App\Models\Delivery;
 use App\Models\Payment;
 use Illuminate\Http\Request;
@@ -58,10 +59,12 @@ class ItemController extends Controller
     {
         $deliveries = Delivery::all();
         $payments = Payment::all();
+        $categories = Category::all();
 
         return view('items.create', [
             'deliveries' => $deliveries,
             'payments' => $payments,
+            'categories' => $categories,
         ]);
     }
 
@@ -76,7 +79,9 @@ class ItemController extends Controller
         $validated = $request->validated();
 
         $user = User::findOrFail(Auth::user()->id);
-        $item = $user->items()->create($validated);
+        $item = $user->items()->make($validated);
+        $item->category()->associate($validated['category']);
+        $item->save();
         
         // Payments are optional.
         if (isset($validated['payments'])) {

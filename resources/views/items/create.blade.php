@@ -34,6 +34,12 @@
       @endforeach
     </div>
     <div>
+      <label>Category *</label><br>
+      @foreach ($categories as $category)
+        <input type="radio" value="{{ $category->id }}" name="category" {{ collect(old('category'))->contains($category->id) ? 'checked' : '' }}>{{ $category->name }}<br>
+      @endforeach
+    </div>
+    <div>
       <label for="image">Image</label>
       <input type="file" name="image" id="image">
     </div>
