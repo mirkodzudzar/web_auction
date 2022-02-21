@@ -58,7 +58,7 @@ class ItemPolicy
         //
     }
 
-    public function cancel_item(User $user, Item $item)
+    public function cancelItem(User $user, Item $item)
     {
         if ($item->status === 'active' && !$item->isExpired()) {
             return $user->id === $item->user->id;
@@ -73,30 +73,30 @@ class ItemPolicy
         if ($item->user->id === $user->id) return false;
 
         if ($item->status === 'active' && !$item->isExpired()) {
-            $item_user = ItemUser::where('item_id', $item->id)
+            $itemUser = ItemUser::where('item_id', $item->id)
                                  ->where('user_id', $user->id)
                                  ->first();
 
             // Will return true if we have not bid yet.
-            return is_null($item_user);
+            return is_null($itemUser);
         }
 
         return false;
 
     }
 
-    public function cancel_bid(User $user, Item $item)
+    public function cancelBid(User $user, Item $item)
     {
         // You can not cancel bid for your own item.
         if ($item->user->id === $user->id) return false;
 
         if ($item->status === 'active' && !$item->isExpired()) {
-            $item_user = ItemUser::where('item_id', $item->id)
+            $itemUser = ItemUser::where('item_id', $item->id)
                              ->where('user_id', $user->id)
                              ->where('status', 'active')
                              ->first();
             // Will return true if we have bidden already.
-            return isset($item_user);
+            return isset($itemUser);
         }
 
         return false;

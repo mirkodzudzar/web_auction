@@ -19,9 +19,9 @@
         <button type="submit">Bid</button>
         <x-error field="price"></x-error>
       </form>
-    @elsecan('cancel_bid', $item)
+    @elsecan('cancelBid', $item)
       <div>
-        <p>Your price: {{ $item->bid_users()->where('user_id', Auth::user()->id)->first()->pivot->price }} RSD</p>
+        <p>Your price: {{ $item->bidUsers()->where('user_id', Auth::user()->id)->first()->pivot->price }} RSD</p>
         <form action="{{ route('items.cancel_bid', ['item' => $item->id]) }}" method="POST">
           @csrf
           <button type="submit">Cancel your bid</button>
@@ -67,7 +67,7 @@
         @if ($item->user->id === Auth::user()->id)
           {{-- In case that cron does not run yet --}}
           @if ($item->isExpired() && $item->status === 'active')
-            <p>Status: expired</p>
+            <p>Status: on hold</p>
           @else
             <p>Status: {{ $item->status}}</p>
           @endif
@@ -82,7 +82,7 @@
     <p>
       <a href="{{ route('users.items.index', ['user' => $item->user->id]) }}">{{ $item->user->full_name }}</a>
     </p>
-    @can('cancel_item', $item)
+    @can('cancelItem', $item)
       <form action="{{ route('items.cancel_item', ['item' => $item->id]) }}" method="POST">
         @csrf
         <button type="submit">Cancel item</button>
@@ -93,14 +93,14 @@
     @if ($item->user->id === Auth::user()->id)
       <div>
         <h3>Users that bid for this item</h3>
-        @if ($item->bid_users()->where('status', 'active')->count())
+        @if ($item->bidUsers()->where('status', 'active')->count())
           <ul>
             {{-- Only active bids will be displayed. --}}
-            @foreach ($item->bid_users()->where('status', 'active')->get() as $bid_user)
+            @foreach ($item->bidUsers()->where('status', 'active')->get() as $bidUser)
               <li>
-                <a href="{{ route('users.items.index', ['user' => $bid_user->id]) }}">{{ $bid_user->full_name }}</a>,
-                {{ $bid_user->bid_items()->where('item_id', $item->id)->first()->pivot->price }} RSD
-                @if ($item->status === 'sold' && $item->buyer->id === $bid_user->id)
+                <a href="{{ route('users.items.index', ['user' => $bidUser->id]) }}">{{ $bidUser->full_name }}</a>,
+                {{ $bidUser->bidItems()->where('item_id', $item->id)->first()->pivot->price }} RSD
+                @if ($item->status === 'sold' && $item->buyer->id === $bidUser->id)
                   - bought this item!
                 @endif
               </li>

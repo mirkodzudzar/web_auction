@@ -11,7 +11,7 @@ class UserController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['auth'])->except(['items_index']);
+        $this->middleware(['auth'])->except(['itemsIndex']);
     }
     
     public function edit(User $user)
@@ -40,10 +40,10 @@ class UserController extends Controller
                          ->withStatus('Your profile has been updated.');
     }
 
-    public function items_index(User $user)
+    public function itemsIndex(User $user)
     {
         $items = $user->items()
-                      ->withCount('bid_users')
+                      ->withCount('bidUsers')
                       ->with('image')
                       ->get();
 
@@ -53,13 +53,13 @@ class UserController extends Controller
         ]);
     }
 
-    public function items_bought(User $user)
+    public function itemsBought(User $user)
     {
         $this->authorize($user);
 
         $items = Item::where('buyer_id', $user->id)
                      ->where('status', 'sold')
-                     ->withCount('bid_users')
+                     ->withCount('bidUsers')
                      ->with('image')
                      ->get();
 
@@ -69,13 +69,13 @@ class UserController extends Controller
         ]);
     }
 
-    public function items_sold(User $user)
+    public function itemsSold(User $user)
     {
         $this->authorize($user);
 
         $items = $user->items()
                       ->where('status', 'sold')
-                      ->withCount('bid_users')
+                      ->withCount('bidUsers')
                       ->with('image')
                       ->get();
 

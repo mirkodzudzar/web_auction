@@ -16,9 +16,9 @@ class CategoriesTableSeeder extends Seeder
     {
         $categories = collect(['Books', 'Clothes', 'Art', 'Cars', 'Music']);
 
-        $categories->each(function ($category_name) {
+        $categories->each(function ($categoryName) {
             $category = new Category();
-            $category->name = $category_name;
+            $category->name = $categoryName;
             $category->save();
         });
     }

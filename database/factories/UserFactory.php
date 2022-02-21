@@ -38,7 +38,7 @@ class UserFactory extends Factory
         });
     }
 
-    public function random_user()
+    public function randomUser()
     {
         return $this->state(function (array $attributes) {
             return [

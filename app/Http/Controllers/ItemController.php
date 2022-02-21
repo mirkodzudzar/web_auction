@@ -27,7 +27,7 @@ class ItemController extends Controller
     public function index()
     {
         $items = Item::with('image')
-                     ->withCount('bid_users')
+                     ->withCount('bidUsers')
                      ->onlyActiveItems()
                      ->get();
 
@@ -83,7 +83,7 @@ class ItemController extends Controller
         ]);
     }
 
-    public function cancel_item(Item $item)
+    public function cancelItem(Item $item)
     {
         $this->authorize($item);
 
@@ -111,19 +111,19 @@ class ItemController extends Controller
                          ->withStatus('You have bidden for this item!');
     }
 
-    public function cancel_bid(Item $item)
+    public function cancelBid(Item $item)
     {
         $this->authorize($item);
         
-        $item_user = ItemUser::where('item_id', $item->id)
+        $itemUser = ItemUser::where('item_id', $item->id)
                              ->where('user_id', Auth::user()->id)
                              ->first();
 
-        $item_user->status = 'canceled';
-        $item_user->save();
+        $itemUser->status = 'canceled';
+        $itemUser->save();
 
         return redirect()->back()
-                         ->withStatus("You have canceled your bid for item '{$item_user->item->name}'");
+                         ->withStatus("You have canceled your bid for item '{$itemUser->item->name}'");
     }
 
     public function search(SearchRequest $request)
@@ -131,11 +131,11 @@ class ItemController extends Controller
         if ($request->has('search')) {
             $result = $request->input('search');
             // First we are getting all ids, with(), withCount() are not awailable while searching...
-            $item_ids = Item::search($result)->get()->pluck('id');
+            $itemIds = Item::search($result)->get()->pluck('id');
 
-            $items = Item::whereIn('id', $item_ids)
+            $items = Item::whereIn('id', $itemIds)
                          ->with('image') 
-                         ->withCount('bid_users')
+                         ->withCount('bidUsers')
                          ->onlyActiveItems()
                          ->get();
         }

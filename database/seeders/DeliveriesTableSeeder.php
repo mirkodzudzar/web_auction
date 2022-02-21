@@ -17,9 +17,9 @@ class DeliveriesTableSeeder extends Seeder
     {
         $deliveries = collect(['City Express', 'Post Express', 'Daily Express', 'Personal']);
 
-        $deliveries->each(function ($delivery_name) {
+        $deliveries->each(function ($deliveryName) {
             $delivery = new Delivery();
-            $delivery->name = $delivery_name;
+            $delivery->name = $deliveryName;
             $delivery->save();
         });
 

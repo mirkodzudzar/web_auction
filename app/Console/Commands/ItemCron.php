@@ -45,22 +45,22 @@ class ItemCron extends Command
 
         $items = Item::where('expires_at', '<=', Carbon::now())->where('status', 'active')->get();
 
-        $highest_price = 0;
+        $highestPrice = 0;
         foreach($items as $item)
         {
             // Order by date of creation to start from oldest bids.
             // In case that there are multiple highest prices that are equeal, first user that bid will be used as a buyer.
-            $item_users = ItemUser::where('item_id', $item->id)->where('status', 'active')->orderBy('created_at', 'ASC')->get();
-            if (count($item_users) === 0) {
+            $itemUsers = ItemUser::where('item_id', $item->id)->where('status', 'active')->orderBy('created_at', 'ASC')->get();
+            if (count($itemUsers) === 0) {
                 // There is no buyer for this item.
                 $item->status = 'expired';
             } else {
-                foreach ($item_users as $item_user) {
-                    if ($item_user->price > $item->starting_price && $item_user->price > $highest_price) {
-                        $highest_price = $item_user->price;
+                foreach ($itemUsers as $itemUser) {
+                    if ($itemUser->price > $item->starting_price && $itemUser->price > $highestPrice) {
+                        $highestPrice = $itemUser->price;
 
-                        $item->final_price = $highest_price;
-                        $item->buyer_id = $item_user->user->id;
+                        $item->final_price = $highestPrice;
+                        $item->buyer_id = $itemUser->user->id;
                         $item->status = 'sold';
                     }
                 }

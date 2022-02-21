@@ -18,7 +18,7 @@ class CategoryController extends Controller
         // To have less queries.
         $items = $category->items()
                           ->with('image')
-                          ->withCount('bid_users')
+                          ->withCount('bidUsers')
                           ->onlyActiveItems()
                           ->get();
 

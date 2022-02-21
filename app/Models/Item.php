@@ -54,7 +54,7 @@ class Item extends Model
         return $this->belongsTo(User::class, 'buyer_id');
     }
 
-    public function bid_users()
+    public function bidUsers()
     {
         return $this->belongsToMany(User::class)
                     ->withPivot(['price', 'status']);
