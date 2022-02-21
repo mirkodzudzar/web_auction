@@ -130,7 +130,7 @@ class ItemController extends Controller
             $itemIds = Item::search($result)->get()->pluck('id');
 
             $items = Item::whereIn('id', $itemIds)
-                         ->withImageAndUsersCount()
+                         ->withImageAndBidUsersCount()
                          ->onlyActiveItems()
                          ->get();
         }

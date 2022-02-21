@@ -19,9 +19,6 @@
           <form action="{{ route('items.search') }}" method="GET">
             <input type="text" name="search" value="{{ $result ?? '' }}" required>
             <button type="submit">Search</button>
-            @if (isset($result))
-            <a href="{{ URL::current() }}">Refresh</a>
-            @endif
             <x-error field="search"></x-error>
           </form>
 
