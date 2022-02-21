@@ -29,19 +29,22 @@ class Item extends Model
      */
     public function toSearchableArray()
     {
-        $data['item'] = $this->only('name', 'description');
+        $array = $this->toArray();
 
-        $data['item_payments'] = $this->payments->map(function ($data) {
-            return $data['name'];
+        $array['item'] = $this->only('name', 'description');
+
+        // Too many queries...
+        $array['item_payments'] = $this->payments->map(function ($array) {
+            return $array['name'];
         })->toArray();
-
-        $data['item_deliveries'] = $this->deliveries->map(function ($data) {
-            return $data['name'];
+        // Too many queries...
+        $array['item_deliveries'] = $this->deliveries->map(function ($array) {
+            return $array['name'];
         })->toArray();
-        
-        $data['item_user'] = $this->user->only('full_name', 'first_name', 'last_name', 'email');
+        // Too many queries...
+        $array['item_user'] = $this->user->only('full_name', 'first_name', 'last_name', 'email');
 
-        return $data;
+        return $array;
     }
 
     public function user()

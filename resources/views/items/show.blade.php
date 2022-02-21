@@ -30,7 +30,7 @@
     @else
       @auth
         @if ($item->buyer && $item->buyer->id === Auth::user()->id)
-          <p>Your price: {{ $item->final_price }}</p>
+          <p>Your price: {{ $item->final_price }} RSD</p>
         @elseif ($item->user->id !== Auth::user()->id)
           <p>You can not bid for this item!</p>
         @endif

@@ -104,7 +104,7 @@ class ItemController extends Controller
         ]);
 
         return redirect()->back()
-                         ->withStatus('You have bidden for this item!');
+                         ->withStatus('You have bid for this item!');
     }
 
     public function cancelBid(Item $item)

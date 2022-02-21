@@ -32,8 +32,10 @@ class ItemPolicy
      */
     public function view(?User $user, Item $item)
     {
-        // Only owner and buyer are able to visit sold item.
         if ($item->status === 'sold') {
+            if(is_null($user)) return false;
+            
+            // Only owner and buyer are able to visit sold item.
             return $user->id === $item->user->id || $user->id === $item->buyer->id;
         }
 
@@ -95,7 +97,7 @@ class ItemPolicy
                              ->where('user_id', $user->id)
                              ->where('status', 'active')
                              ->first();
-            // Will return true if we have bidden already.
+            // Will return true if we have bid already.
             return isset($itemUser);
         }
 
