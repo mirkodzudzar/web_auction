@@ -4,9 +4,7 @@
   @section('page_title', 'Login')
   <form action="{{ route('login') }}" method="POST">
     @csrf
-    @if($errors->any())
-      {!! implode('', $errors->all('<div>:message</div>')) !!}
-    @endif
+    <x-errors :errors="$errors"></x-errors>
     <div>
       <label for="email">Email *</label>
       <input type="email" name="email" id="email" value="{{ old('email') }}" required>

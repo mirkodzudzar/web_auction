@@ -5,10 +5,7 @@
 
   <form action="{{ route('items.store') }}" method="POST" enctype="multipart/form-data">
     @csrf
-    @if($errors->any())
-      {!! implode('', $errors->all('<div>:message</div>')) !!}
-    @endif
-    
+    <x-errors :errors="$errors"></x-errors>    
     <div>
       <label for="name">Name *</label>
       <input type="text" name="name" id="name" value="{{ old('name') }}" required>

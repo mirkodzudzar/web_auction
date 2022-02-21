@@ -9,11 +9,9 @@
     @endif
     <p>{{ $item->description }}</p>
     <p>Starting price: {{ $item->starting_price }} RSD</p>
-    @if($errors->any())
-      {!! implode('', $errors->all('<div>:message</div>')) !!}
-    @endif
     
     @can('bid', $item)
+      <x-errors :errors="$errors"></x-errors>
       <form action="{{ route('items.bid', ['item' => $item->id]) }}" method="POST">
         @csrf
         <div>

@@ -5,10 +5,7 @@
   <form action="{{ route('users.update', ['user' => $user->id]) }}" method="POST">
     @csrf
     @method('PUT')
-    @if($errors->any())
-      {!! implode('', $errors->all('<div>:message</div>')) !!}
-    @endif
-    
+    <x-errors :errors="$errors"></x-errors>
     @include('includes._user-form')
 
     <button type="submit">Edit</button>

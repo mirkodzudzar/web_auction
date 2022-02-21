@@ -4,10 +4,7 @@
   @section('page_title', 'Register')
   <form action="{{ route('register') }}" method="POST">
     @csrf
-    @if($errors->any())
-      {!! implode('', $errors->all('<div>:message</div>')) !!}
-    @endif
-
+    <x-errors :errors="$errors"></x-errors>
     @include('includes._user-form')
 
     <button type="submit">Register</button>
