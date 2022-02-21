@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\ItemCreated;
 use App\Models\Item;
 use App\Models\Payment;
 use App\Models\Category;
@@ -10,6 +9,7 @@ use App\Models\Delivery;
 use App\Models\ItemUser;
 use App\Http\Requests\StoreItem;
 use App\Http\Requests\SearchRequest;
+use App\Services\ItemService;
 use Illuminate\Support\Facades\Auth;
 
 class ItemController extends Controller
@@ -26,8 +26,7 @@ class ItemController extends Controller
      */
     public function index()
     {
-        $items = Item::with('image')
-                     ->withCount('bidUsers')
+        $items = Item::withImageAndBidUsersCount()
                      ->onlyActiveItems()
                      ->get();
 
@@ -43,14 +42,10 @@ class ItemController extends Controller
      */
     public function create()
     {
-        $deliveries = Delivery::all();
-        $payments = Payment::all();
-        $categories = Category::all();
-
         return view('items.create', [
-            'deliveries' => $deliveries,
-            'payments' => $payments,
-            'categories' => $categories,
+            'deliveries' => Delivery::all(),
+            'payments' => Payment::all(),
+            'categories' => Category::all(),
         ]);
     }
 
@@ -62,7 +57,7 @@ class ItemController extends Controller
      */
     public function store(StoreItem $request)
     {
-        $item = event(new ItemCreated($request->validated()))[0];
+        $item = ItemService::store($request->validated());
 
         return redirect()->route('items.show', ['item' => $item->id])
                          ->withStatus("You have published new item!");
@@ -98,6 +93,7 @@ class ItemController extends Controller
     {
         $this->authorize($item);
 
+        // Validation is not in custom request, because of $item->starting_price value.
         $rules['price'] = "required|integer|gt:{$item->starting_price}";
         $validated = request()->validate($rules);
 
@@ -116,8 +112,8 @@ class ItemController extends Controller
         $this->authorize($item);
         
         $itemUser = ItemUser::where('item_id', $item->id)
-                             ->where('user_id', Auth::user()->id)
-                             ->first();
+                            ->where('user_id', Auth::user()->id)
+                            ->first();
 
         $itemUser->status = 'canceled';
         $itemUser->save();
@@ -134,8 +130,7 @@ class ItemController extends Controller
             $itemIds = Item::search($result)->get()->pluck('id');
 
             $items = Item::whereIn('id', $itemIds)
-                         ->with('image') 
-                         ->withCount('bidUsers')
+                         ->withImageAndUsersCount()
                          ->onlyActiveItems()
                          ->get();
         }

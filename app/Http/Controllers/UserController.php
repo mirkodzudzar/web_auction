@@ -43,8 +43,7 @@ class UserController extends Controller
     public function itemsIndex(User $user)
     {
         $items = $user->items()
-                      ->withCount('bidUsers')
-                      ->with('image')
+                      ->withImageAndBidUsersCount()
                       ->get();
 
         return view('users.items.index', [
@@ -59,8 +58,7 @@ class UserController extends Controller
 
         $items = Item::where('buyer_id', $user->id)
                      ->where('status', 'sold')
-                     ->withCount('bidUsers')
-                     ->with('image')
+                     ->withImageAndBidUsersCount()
                      ->get();
 
         return view('users.items.bought', [
@@ -75,8 +73,7 @@ class UserController extends Controller
 
         $items = $user->items()
                       ->where('status', 'sold')
-                      ->withCount('bidUsers')
-                      ->with('image')
+                      ->withImageAndBidUsersCount()
                       ->get();
 
         return view('users.items.sold', [

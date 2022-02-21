@@ -15,16 +15,8 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        // To have less queries.
-        $items = $category->items()
-                          ->with('image')
-                          ->withCount('bidUsers')
-                          ->onlyActiveItems()
-                          ->get();
-
         return view('category.show', [
             'category' => $category,
-            'items' => $items,
         ]);
     }
 }

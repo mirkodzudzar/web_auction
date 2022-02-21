@@ -95,6 +95,12 @@ class Item extends Model
         return false;
     }
 
+    public function scopeWithImageAndBidUsersCount(Builder $builder)
+    {
+        return $builder->with('image')
+                       ->withCount('bidUsers');
+    }
+
     public static function boot()
     {
         static::addGlobalScope(new NewestScope);
