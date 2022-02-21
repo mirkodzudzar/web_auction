@@ -7,6 +7,7 @@
     @if ($item->image)
       <img src="{{ $item->image->url() }}">
     @endif
+    
     <p>{{ $item->description }}</p>
     <p>Starting price: {{ $item->starting_price }} RSD</p>
     
@@ -31,7 +32,9 @@
       </div>
     @else
       @auth
-        @if ($item->user->id !== Auth::user()->id)
+        @if ($item->buyer && $item->buyer->id === Auth::user()->id)
+          <p>Your price: {{ $item->final_price }}</p>
+        @elseif ($item->user->id !== Auth::user()->id)
           <p>You can not bid for this item!</p>
         @endif
       @endauth
@@ -93,25 +96,17 @@
     @if ($item->user->id === Auth::user()->id)
       <div>
         <h3>Users that bid for this item</h3>
-        @if ($item->bid_users->count() > 0)
+        @if ($item->bid_users()->where('status', 'active')->count())
           <ul>
-            @foreach ($item->bid_users as $bid_user)
-              {{-- Only active bids will be displayed. --}}
-              @php
-                $item_user = App\Models\ItemUser::where('item_id', $item->id)
-                                                ->where('user_id', $bid_user->id)
-                                                ->where('status', 'active')
-                                                ->first();
-              @endphp
-              @if (isset($item_user))
-                <li>
-                  <a href="{{ route('users.items.index', ['user' => $bid_user->id]) }}">{{ $bid_user->full_name }}</a>,
-                  {{ $bid_user->bid_items()->where('item_id', $item->id)->first()->pivot->price }} RSD
-                  @if ($item->status === 'sold' && $item->buyer->id === $bid_user->id)
-                    - bought this item!
-                  @endif
-                </li>
-              @endif
+            {{-- Only active bids will be displayed. --}}
+            @foreach ($item->bid_users()->where('status', 'active')->get() as $bid_user)
+              <li>
+                <a href="{{ route('users.items.index', ['user' => $bid_user->id]) }}">{{ $bid_user->full_name }}</a>,
+                {{ $bid_user->bid_items()->where('item_id', $item->id)->first()->pivot->price }} RSD
+                @if ($item->status === 'sold' && $item->buyer->id === $bid_user->id)
+                  - bought this item!
+                @endif
+              </li>
             @endforeach
           </ul>
         @else
