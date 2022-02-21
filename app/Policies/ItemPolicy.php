@@ -32,8 +32,13 @@ class ItemPolicy
      */
     public function view(?User $user, Item $item)
     {
-        if ($item->status !== 'active') {
-            // If we are guest, we can not visit item that is not active.
+        // Only owner and buyer are able to visit sold item.
+        if ($item->status === 'sold') {
+            return $user->id === $item->user->id || $user->id === $item->buyer->id;
+        }
+
+        if ($item->status !== 'active' || $item->isExpired()) {
+            // If we are guest, we can not visit item that is not active or expired.
             if(is_null($user)) return false;
 
             return $user->id === $item->user->id;
@@ -55,7 +60,7 @@ class ItemPolicy
 
     public function cancel_item(User $user, Item $item)
     {
-        if ($item->status === 'active') {
+        if ($item->status === 'active' && !$item->isExpired()) {
             return $user->id === $item->user->id;
         }
 
@@ -66,13 +71,18 @@ class ItemPolicy
     {
         // You can not bid for your own item.
         if ($item->user->id === $user->id) return false;
-     
-        $item_user = ItemUser::where('item_id', $item->id)
-                             ->where('user_id', $user->id)
-                             ->first();
 
-        // Will return true if we have not bidden yet.
-        return is_null($item_user);
+        if ($item->status === 'active' && !$item->isExpired()) {
+            $item_user = ItemUser::where('item_id', $item->id)
+                                 ->where('user_id', $user->id)
+                                 ->first();
+
+            // Will return true if we have not bid yet.
+            return is_null($item_user);
+        }
+
+        return false;
+
     }
 
     public function cancel_bid(User $user, Item $item)
@@ -80,7 +90,7 @@ class ItemPolicy
         // You can not cancel bid for your own item.
         if ($item->user->id === $user->id) return false;
 
-        if ($item->status === 'active') {
+        if ($item->status === 'active' && !$item->isExpired()) {
             $item_user = ItemUser::where('item_id', $item->id)
                              ->where('user_id', $user->id)
                              ->where('status', 'active')

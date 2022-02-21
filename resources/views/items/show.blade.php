@@ -34,7 +34,7 @@
     @else
       @auth
         @if ($item->user->id !== Auth::user()->id)
-          <p>You have canceled your bid already!</p>
+          <p>You can not bid for this item!</p>
         @endif
       @endauth
     @endcan
@@ -57,7 +57,7 @@
       @endforeach
     </p>
 
-    @if ($item->status === 'active')
+    @if ($item->status === 'active' && !$item->isExpired())
       @php
         $days = \Carbon\Carbon::parse($item->expires_at)->diffInDays(\Carbon\Carbon::now());
         $hours = \Carbon\Carbon::parse($item->expires_at)->diffInHours(\Carbon\Carbon::now());
@@ -67,7 +67,12 @@
     @else
       @auth
         @if ($item->user->id === Auth::user()->id)
-          <p>Status: {{ $item->status }}</p>
+          {{-- In case that cron does not run yet --}}
+          @if ($item->isExpired() && $item->status === 'active')
+            <p>Status: expired</p>
+          @else
+            <p>Status: {{ $item->status}}</p>
+          @endif
         @endif
       @endauth
     @endif

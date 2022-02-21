@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use App\Scopes\NewestScope;
 use Laravel\Scout\Searchable;
 use Illuminate\Database\Eloquent\Model;
@@ -76,6 +77,15 @@ class Item extends Model
     public function category()
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function isExpired()
+    {
+        if (Carbon::parse($this->expires_at) < Carbon::now()) {
+            return true;
+        }
+
+        return false;
     }
 
     public static function boot()
