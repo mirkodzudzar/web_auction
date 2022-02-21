@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\ItemCreated;
 use App\Models\Item;
-use App\Models\User;
-use App\Models\Image;
 use App\Models\Payment;
 use App\Models\Category;
 use App\Models\Delivery;
 use App\Models\ItemUser;
-use Illuminate\Http\Request;
 use App\Http\Requests\StoreItem;
 use App\Http\Requests\SearchRequest;
 use Illuminate\Support\Facades\Auth;
@@ -64,29 +62,7 @@ class ItemController extends Controller
      */
     public function store(StoreItem $request)
     {
-        $validated = $request->validated();
-
-        $user = User::findOrFail(Auth::user()->id);
-        $item = $user->items()->make($validated);
-        $item->category()->associate($validated['category']);
-        $item->save();
-        
-        // Payments are optional.
-        if (isset($validated['payments'])) {
-            // Save payments for this item.
-            $item->payments()->sync($validated['payments']);
-        }
-        
-        // Save deliveries for this item.
-        $item->deliveries()->sync($validated['deliveries']);
-
-        // Image file is optional.
-        if (isset($validated['image'])) {
-            $path = $validated['image']->store('images');
-            $item->image()->save(
-                Image::make(['path' => $path])
-            );
-        }
+        $item = event(new ItemCreated($request->validated()))[0];
 
         return redirect()->route('items.show', ['item' => $item->id])
                          ->withStatus("You have published new item!");
