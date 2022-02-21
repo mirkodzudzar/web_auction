@@ -5,12 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\Item;
 use App\Models\User;
 use App\Models\Image;
-use App\Models\ItemUser;
-use App\Http\Requests\StoreItem;
+use App\Models\Payment;
 use App\Models\Category;
 use App\Models\Delivery;
-use App\Models\Payment;
+use App\Models\ItemUser;
 use Illuminate\Http\Request;
+use App\Http\Requests\StoreItem;
+use App\Http\Requests\SearchRequest;
 use Illuminate\Support\Facades\Auth;
 
 class ItemController extends Controller
@@ -149,7 +150,7 @@ class ItemController extends Controller
                          ->withStatus("You have canceled your bid for item '{$item_user->item->name}'");
     }
 
-    public function search(Request $request)
+    public function search(SearchRequest $request)
     {
         if ($request->has('search')) {
             $result = $request->input('search');
