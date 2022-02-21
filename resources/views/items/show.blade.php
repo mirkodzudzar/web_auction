@@ -12,15 +12,12 @@
     <p>Starting price: {{ $item->starting_price }} RSD</p>
     
     @can('bid', $item)
-      <x-errors :errors="$errors"></x-errors>
       <form action="{{ route('items.bid', ['item' => $item->id]) }}" method="POST">
         @csrf
-        <div>
-          <label for="price">Your price *</label>
-          <input type="text" name="price" id="price" value="{{ old('price') }}" required>
-
-          <button type="submit">Bid</button>
-        </div>
+        <label for="price">Your price *</label>
+        <input type="text" name="price" id="price" value="{{ old('price') }}" required>
+        <button type="submit">Bid</button>
+        <x-error field="price"></x-error>
       </form>
     @elsecan('cancel_bid', $item)
       <div>

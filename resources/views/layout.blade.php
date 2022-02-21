@@ -18,11 +18,11 @@
 
           <form action="{{ route('items.search') }}" method="GET">
             <input type="text" name="search" value="{{ $result ?? '' }}" required>
-            <x-errors :errors="$errors"></x-errors>  
             <button type="submit">Search</button>
             @if (isset($result))
-              <a href="{{ URL::current() }}">Refresh</a>
+            <a href="{{ URL::current() }}">Refresh</a>
             @endif
+            <x-error field="search"></x-error>
           </form>
 
           <ul>
