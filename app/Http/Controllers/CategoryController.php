@@ -19,6 +19,7 @@ class CategoryController extends Controller
         $items = $category->items()
                           ->with('image')
                           ->withCount('bid_users')
+                          ->onlyActiveItems()
                           ->get();
 
         return view('category.show', [

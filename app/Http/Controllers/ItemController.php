@@ -26,9 +26,9 @@ class ItemController extends Controller
      */
     public function index()
     {
-        $items = Item::where('status', 'active')
-                     ->with('image')
+        $items = Item::with('image')
                      ->withCount('bid_users')
+                     ->onlyActiveItems()
                      ->get();
 
         return view('items.index', [
@@ -134,9 +134,9 @@ class ItemController extends Controller
             $item_ids = Item::search($result)->get()->pluck('id');
 
             $items = Item::whereIn('id', $item_ids)
-                         ->where('status', 'active')
                          ->with('image') 
                          ->withCount('bid_users')
+                         ->onlyActiveItems()
                          ->get();
         }
 

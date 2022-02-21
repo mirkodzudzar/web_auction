@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use App\Scopes\NewestScope;
+use Illuminate\Database\Eloquent\Builder;
 use Laravel\Scout\Searchable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -77,6 +78,12 @@ class Item extends Model
     public function category()
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function scopeOnlyActiveItems(Builder $builder)
+    {
+        return $builder->whereDate('expires_at', '>', Carbon::now())
+                       ->where('status', '=', 'active');
     }
 
     public function isExpired()
