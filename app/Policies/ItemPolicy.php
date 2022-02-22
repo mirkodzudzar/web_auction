@@ -12,17 +12,6 @@ class ItemPolicy
     use HandlesAuthorization;
 
     /**
-     * Determine whether the user can view any models.
-     *
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Auth\Access\Response|bool
-     */
-    public function viewAny(User $user)
-    {
-        //
-    }
-
-    /**
      * Determine whether the user can view the model.
      * ?User means that when there is a quest user, it will be able to view item page.
      *
@@ -48,18 +37,7 @@ class ItemPolicy
 
         return true;
     }
-
-    /**
-     * Determine whether the user can create models.
-     *
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Auth\Access\Response|bool
-     */
-    public function create(User $user)
-    {
-        //
-    }
-
+    
     public function cancelItem(User $user, Item $item)
     {
         if ($item->status === 'active' && !$item->isExpired()) {
