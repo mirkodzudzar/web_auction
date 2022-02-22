@@ -18,6 +18,7 @@
     <div>
       <label for="starting_price">Starting price *</label>
       <input type="text" name="starting_price" id="starting_price" value="{{ old('starting_price') }}" required>
+      RSD
       <x-error field="starting_price"></x-error>
     </div>
     <div>

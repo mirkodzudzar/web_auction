@@ -91,7 +91,7 @@ class Item extends Model
 
     public function isExpired()
     {
-        if (Carbon::parse($this->expires_at) < Carbon::now()) {
+        if (Carbon::parse($this->expires_at) <= Carbon::now()) {
             return true;
         }
 
