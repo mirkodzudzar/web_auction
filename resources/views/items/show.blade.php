@@ -55,13 +55,15 @@
       @endforeach
     </p>
 
+    {{-- Displaying how much time is left until the item expires. --}}
     @if ($item->status === 'active' && !$item->isExpired())
       @php
         $days = \Carbon\Carbon::parse($item->expires_at)->diffInDays(\Carbon\Carbon::now());
         $hours = \Carbon\Carbon::parse($item->expires_at)->diffInHours(\Carbon\Carbon::now());
         $minutes = \Carbon\Carbon::parse($item->expires_at)->diffInMinutes(\Carbon\Carbon::now());
+        $seconds = \Carbon\Carbon::parse($item->expires_at)->diffInSeconds(\Carbon\Carbon::now());
       @endphp
-      <p>Auction will end in: {{ $days !== 0 ? "$days day(s)" : ($hours !== 0 ? "$hours hour(s)" : "$minutes minute(s)") }}</p>
+      <p>Auction will end in: {{ $days !== 0 ? "$days day(s)" : ($hours !== 0 ? "$hours hour(s)" : ($minutes !== 0 ? "$minutes minute(s)" : "$seconds second(s)" )) }}</p>
     @else
       @auth
         @if ($item->user->id === Auth::user()->id)
