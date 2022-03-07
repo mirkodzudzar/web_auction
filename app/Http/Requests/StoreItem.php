@@ -24,8 +24,8 @@ class StoreItem extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|string|max:255',
-            'description' => 'required|string',
+            'name' => 'required|string|min:2|max:255',
+            'description' => 'required|string|min:5',
             'starting_price' => 'required|integer|max:1000000000',
             'payments' => 'nullable|exists:payments,id',
             'deliveries' => 'required|exists:deliveries,id',

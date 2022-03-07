@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Item;
 use App\Models\User;
 use App\Models\Category;
+use App\Models\Condition;
 use Illuminate\Database\Seeder;
 
 class ItemsTableSeeder extends Seeder
@@ -20,7 +21,8 @@ class ItemsTableSeeder extends Seeder
             Item::factory(5)->make([
                 'category_id' => $category->id,
             ])->each(function (Item $item) {
-                $item->user_id = User::inRandomOrder()->take(1)->get()->pluck('id')[0];
+                $item->user()->associate(User::inRandomOrder()->take(1)->first());
+                $item->condition()->associate(Condition::inRandomOrder()->take(1)->first());
                 $item->save();
             });
         });

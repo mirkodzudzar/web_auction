@@ -83,6 +83,11 @@ class Item extends Model
         return $this->belongsTo(Category::class);
     }
 
+    public function condition()
+    {
+        return $this->belongsTo(Condition::class);
+    }
+
     public function scopeOnlyActiveItems(Builder $builder)
     {
         return $builder->whereDate('expires_at', '>', Carbon::now())
