@@ -77,6 +77,8 @@
       @endauth
     @endif
 
+    <p>Condition: {{ $item->condition->name }}</p>
+
     <p>Category: 
       <a href="{{ route('categories.show', ['category' => $item->category->id]) }}">{{ $item->category->name }}</a>
     </p>
