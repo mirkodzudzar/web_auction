@@ -30,6 +30,7 @@ class StoreItem extends FormRequest
             'payments' => 'nullable|exists:payments,id',
             'deliveries' => 'required|exists:deliveries,id',
             'category' => 'required|max:1|exists:categories,id',
+            'condition' => 'required|max:1|exists:conditions,id',
             'image' => 'nullable|image|mimes:png,jpg,jpeg,gif,svg|max:2048',
         ];
     }

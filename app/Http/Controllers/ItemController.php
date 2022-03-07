@@ -42,11 +42,7 @@ class ItemController extends Controller
      */
     public function create()
     {
-        return view('items.create', [
-            'deliveries' => Delivery::all(),
-            'payments' => Payment::all(),
-            'categories' => Category::all(),
-        ]);
+        return view('items.create');
     }
 
     /**

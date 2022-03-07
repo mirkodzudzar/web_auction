@@ -9,8 +9,6 @@ class LayoutComposer
 {
   public function compose(View $view)
   {
-    $categories = Category::all();
-
-    $view->with('categories', $categories);
+    $view->with('categories', Category::all());
   }
 }

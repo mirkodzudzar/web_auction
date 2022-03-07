@@ -38,9 +38,16 @@
     <div>
       <label>Category *</label><br>
       @foreach ($categories as $category)
-        <input type="radio" value="{{ $category->id }}" name="category" {{ collect(old('category'))->contains($category->id) ? 'checked' : '' }}>{{ $category->name }}<br>
+        <input type="radio" value="{{ $category->id }}" name="category" {{ (int) old('category') === $category->id ? 'checked' : '' }}>{{ $category->name }}<br>
       @endforeach
       <x-error field="category"></x-error>
+    </div>
+    <div>
+      <label for="condition">Condition *</label><br>
+      @foreach ($conditions as $condition)
+        <input type="radio" value="{{ $condition->id }}" name="condition" {{ (int) old('condition') === $condition->id ? 'checked' : '' }}>{{ $condition->name }}<br>
+      @endforeach
+      <x-error field="condition"></x-error>
     </div>
     <div>
       <label for="image">Image</label>
