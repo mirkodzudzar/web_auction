@@ -4,9 +4,10 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use App\Scopes\NewestScope;
-use Illuminate\Database\Eloquent\Builder;
 use Laravel\Scout\Searchable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Item extends Model
@@ -45,6 +46,13 @@ class Item extends Model
         $array['item_user'] = $this->user->only('full_name', 'first_name', 'last_name', 'email');
 
         return $array;
+    }
+
+    public function getThumbnailAttribute()
+    {
+        $path = pathinfo($this->image->path);
+        // dd($path);
+        return Storage::url($path['filename'] . "-thumbnail.jpg");
     }
 
     public function user()

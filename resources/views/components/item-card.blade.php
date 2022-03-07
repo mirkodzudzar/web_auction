@@ -1,6 +1,6 @@
 <div>
   @if ($item->image)
-    <img src="{{ $item->image->url() }}">
+    <img src="{{ $item->thumbnail}}">
   @endif
   <p>
     @can('view', $item)

@@ -6,6 +6,9 @@ use App\Models\Item;
 use App\Models\User;
 use App\Models\Image;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Facades\Image as InterventionImage;
 
 class ItemService
 {
@@ -29,10 +32,22 @@ class ItemService
     
     // Image file is optional.
     if (isset($data['image'])) {
-        $path = $data['image']->store('images');
-        $item->image()->save(
-            Image::make(['path' => $path])
-        );
+      // Storing original image
+      $image = $data['image'];
+      $imageName = uniqid($item->id . "_") . "." . $image->getClientOriginalExtension();
+      Storage::put($imageName, File::get($image));
+      $item->image()->save(
+        Image::make([
+          'path' => $imageName,
+        ]),
+      );
+
+      // Creating thumbnail image into storage
+      $thumbnail = InterventionImage::make($image);
+      $thumbnail->fit(150);
+      $thumbnailJpg = (string) $thumbnail->encode('jpg');
+      $thumbnailName = pathinfo($imageName, PATHINFO_FILENAME) . '-thumbnail.jpg';
+      Storage::put($thumbnailName, $thumbnailJpg);
     }
 
     return $item;
