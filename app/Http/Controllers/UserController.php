@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Item;
 use App\Models\User;
+use App\Models\Comment;
 use App\Http\Requests\UpdateUser;
+use App\Http\Requests\CreateComment;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
@@ -87,5 +90,23 @@ class UserController extends Controller
         return view('users.comments', [
             'user' => $user,
         ]);
+    }
+
+    public function createComment(CreateComment $request, User $user)
+    {
+        $this->authorize($user);
+        
+        $validated = $request->validated();
+        $comment = Comment::make([
+            'text' => $validated['text'],
+        ]);
+        
+        $comment->user()->associate($user);
+        $comment->commentator()->associate(Auth::user());
+
+        $comment->save();
+
+        return redirect()->route('users.comments', ['user' => $user->id])
+                         ->withStatus("You have commented on user '{$user->full_name}'");
     }
 }

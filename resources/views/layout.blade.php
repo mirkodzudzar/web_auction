@@ -42,14 +42,14 @@
       </nav>
 
       <div>
+        <h1>
+          @yield('page_title')
+        </h1>
         @if (session('status'))
           <div>
             {{ session('status') }}
           </div>
         @endif
-        <h1>
-          @yield('page_title')
-        </h1>
         
         @yield('content')
       

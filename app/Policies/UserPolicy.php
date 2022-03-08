@@ -30,4 +30,17 @@ class UserPolicy
     {
         return $user->id === $model->id;
     }
+
+    public function createComment(User $user, User $model)
+    {
+        $userComments = $model->comments()->where('commentator_id', $user->id)->get();
+
+        // You can leave only one comment for each user,
+        // and you can not leave comment about yourself.
+        if ($user->id !== $model->id && $userComments->count() === 0) {
+            return true;
+        }
+
+        return false;
+    }
 }
