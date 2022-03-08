@@ -33,7 +33,9 @@ class UserPolicy
 
     public function createComment(User $user, User $model)
     {
-        $userComments = $model->comments()->where('commentator_id', $user->id)->get();
+        $userComments = $model->comments()
+                              ->where('commentator_id', $user->id)
+                              ->get();
 
         // You can leave only one comment for each user,
         // and you can not leave comment about yourself.

@@ -31,13 +31,9 @@ class UserController extends Controller
         $this->authorize($user);
         
         $validated = $request->validated();
+        $validated['password'] = is_null($validated['password']) ? $user->password : Hash::make($validated['password']);
 
-        $user->update([
-            'first_name' => $validated['first_name'],
-            'last_name' => $validated['last_name'],
-            'email' => $validated['email'],
-            'password' => Hash::make($validated['password']),
-        ]);
+        $user->update($validated);
 
         return redirect()->back()
                          ->withStatus('Your profile has been updated.');
@@ -59,10 +55,10 @@ class UserController extends Controller
     {
         $this->authorize($user);
 
-        $items = Item::where('buyer_id', $user->id)
-                     ->where('status', 'sold')
-                     ->withImageAndBidUsersCount()
-                     ->get();
+        $items = $user->buyerItems()
+                      ->where('status', 'sold')
+                      ->withImageAndBidUsersCount()
+                      ->get();
 
         return view('users.items.bought', [
             'user' => $user,

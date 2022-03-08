@@ -53,9 +53,9 @@ class ItemPolicy
         if ($item->user->id === $user->id) return false;
 
         if ($item->status === 'active' && !$item->isExpired()) {
-            $itemUser = ItemUser::where('item_id', $item->id)
-                                 ->where('user_id', $user->id)
-                                 ->first();
+            $itemUser = $item->bidUsers()
+                             ->where('user_id', $user->id)
+                             ->first();
 
             // Will return true if we have not bid yet.
             return is_null($itemUser);
@@ -71,7 +71,7 @@ class ItemPolicy
         if ($item->user->id === $user->id) return false;
 
         if ($item->status === 'active' && !$item->isExpired()) {
-            $itemUser = ItemUser::where('item_id', $item->id)
+            $itemUser = $item->bidUsers()
                              ->where('user_id', $user->id)
                              ->where('status', 'active')
                              ->first();

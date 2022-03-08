@@ -90,11 +90,14 @@ class ItemController extends Controller
         $rules['price'] = "required|integer|gt:{$item->starting_price}";
         $validated = request()->validate($rules);
 
-        ItemUser::create([
-            'item_id' => $item->id,
-            'user_id' => Auth::user()->id,
+        $itemUser = ItemUser::make([
             'price' => $validated['price'],
         ]);
+
+        $itemUser->item()->associate($item);
+        $itemUser->user()->associate(Auth::user());
+
+        $itemUser->save();
 
         return redirect()->back()
                          ->withStatus('You have bid for this item!');
@@ -103,16 +106,17 @@ class ItemController extends Controller
     public function cancelBid(Item $item)
     {
         $this->authorize($item);
-        
-        $itemUser = ItemUser::where('item_id', $item->id)
-                            ->where('user_id', Auth::user()->id)
-                            ->first();
 
-        $itemUser->status = 'canceled';
-        $itemUser->save();
+        $item->bidUsers()
+             ->where('user_id', Auth::user()->id)
+             ->first()
+             ->pivot
+             ->update([
+                 'status' => 'canceled',
+             ]);
 
         return redirect()->back()
-                         ->withStatus("You have canceled your bid for item '{$itemUser->item->name}'");
+                         ->withStatus("You have canceled your bid for item '{$item->name}'");
     }
 
     public function search(SearchRequest $request)
