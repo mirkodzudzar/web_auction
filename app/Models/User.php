@@ -57,11 +57,6 @@ class User extends Authenticatable
         return $this->hasMany(Item::class, 'buyer_id');
     }
 
-    // public function buyer()
-    // {
-    //     return $this->hasOne(User::class, 'buyer_id');
-    // }
-
     public function bidItems()
     {
         return $this->belongsToMany(Item::class)
