@@ -9,9 +9,11 @@
       <p>{{ $comment->text }}</p>
       <p>Commented <i>{{ $comment->created_at->diffForHumans() }},</i></p>
       <p>by <small><a href="{{ route('users.items.index', ['user' => $comment->commentator->id]) }}">{{ $comment->commentator->full_name }}</a></small></p>
-      <hr>
+      @if (!$loop->last)
+        <hr>
+      @endif
     </div>
   @empty
-    <p>No items yet.</p>
+    <p>No comments yet.</p>
   @endforelse
 @endsection

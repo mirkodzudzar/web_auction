@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\User;
 use App\Models\Comment;
 use Illuminate\Database\Seeder;
 
@@ -14,6 +15,15 @@ class CommentsTableSeeder extends Seeder
      */
     public function run()
     {
-        Comment::factory(50)->create();
+        User::all()->each(function(User $commentator) {
+            User::all()->each(function(User $user) use ($commentator) {
+                if ($commentator->id !== $user->id) {
+                    $comment = Comment::factory()->make();
+                    $comment->user()->associate($user);
+                    $comment->commentator()->associate($commentator);
+                    $comment->save();
+                }
+            });
+        });
     }
 }
