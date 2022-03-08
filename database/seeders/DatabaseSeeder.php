@@ -27,6 +27,7 @@ class DatabaseSeeder extends Seeder
             ItemUserTableSeeder::class,
             PaymentsTableSeeder::class,
             DeliveriesTableSeeder::class,
+            CommentsTableSeeder::class,
         ]);
     }
 }

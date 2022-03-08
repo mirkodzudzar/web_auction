@@ -81,4 +81,11 @@ class UserController extends Controller
             'items' => $items,
         ]);
     }
+
+    public function comments(User $user)
+    {
+        return view('users.comments', [
+            'user' => $user,
+        ]);
+    }
 }

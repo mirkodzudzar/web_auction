@@ -62,4 +62,14 @@ class User extends Authenticatable
         return $this->belongsToMany(Item::class)
                     ->withPivot(['price', 'status']);
     }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
+
+    public function commentator()
+    {
+        return $this->hasOne(User::class, 'commentator_id');
+    }
 }

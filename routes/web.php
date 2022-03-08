@@ -22,6 +22,7 @@ Route::get('/', [ItemController::class, 'index'])->name('items.index');
 Route::get('users/{user}/items', [UserController::class, 'itemsIndex'])->name('users.items.index');
 Route::get('users/{user}/items/bought', [UserController::class, 'itemsBought'])->name('users.items.bought');
 Route::get('users/{user}/items/sold', [UserController::class, 'itemsSold'])->name('users.items.sold');
+Route::get('users/{user}/comments', [UserController::class, 'comments'])->name('users.comments');
 Route::resource('users', UserController::class)->only(['edit', 'update']);
 
 Route::post('/items/{item}/cancel-item', [ItemController::class, 'cancelItem'])->name('items.cancel_item');
