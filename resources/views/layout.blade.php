@@ -3,6 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="https://kit.fontawesome.com/a615d0ecba.js" crossorigin="anonymous"></script>
         <title>Web auction</title>
     </head>
     <body>
@@ -33,6 +34,7 @@
               <li><a href="{{ route('users.items.bought', ['user' => Auth::user()->id]) }}">Bought items</a></li>
               <li><a href="{{ route('users.items.sold', ['user' => Auth::user()->id]) }}">Sold items</a></li>
               <li><a href="{{ route('users.comments', ['user' => Auth::user()->id]) }}">Comments about you</a></li>
+              <li><a href="{{ route('users.notifications', ['user' => Auth::user()->id]) }}">Notifications</a></li>
               <li><a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit()">Logout</a></li>
               <form action="{{ route('logout') }}" id="logout-form" method="POST" style="display: none">
                 @csrf
@@ -55,5 +57,7 @@
         @yield('content')
       
       </div>
+
+      @yield('scripts')
     </body>
 </html>

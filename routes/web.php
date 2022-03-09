@@ -24,6 +24,10 @@ Route::get('users/{user}/items/bought', [UserController::class, 'itemsBought'])-
 Route::get('users/{user}/items/sold', [UserController::class, 'itemsSold'])->name('users.items.sold');
 Route::get('users/{user}/comments', [UserController::class, 'comments'])->name('users.comments');
 Route::post('users/{user}/comments/create', [UserController::class, 'createComment'])->name('users.comments.create');
+Route::get('users/{user}/notifications', [UserController::class, 'notifications'])->name('users.notifications');
+Route::get('users/{user}/notifications/{id}/mark-as-read', [UserController::class, 'markAsRead'])->name('users.notifications.markAsRead');
+Route::get('users/{user}/notifications/{id}/mark-as-unread', [UserController::class, 'markAsUnread'])->name('users.notifications.markAsUnread');
+Route::get('users/{user}/notificaitons/mark-all-read', [UserController::class, 'markAllRead'])->name('users.notifications.markAllRead');
 Route::resource('users', UserController::class)->only(['edit', 'update']);
 
 Route::post('/items/{item}/cancel-item', [ItemController::class, 'cancelItem'])->name('items.cancel_item');

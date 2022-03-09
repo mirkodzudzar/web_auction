@@ -9,6 +9,7 @@ use App\Http\Requests\UpdateUser;
 use App\Http\Requests\CreateComment;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Notification;
 
 class UserController extends Controller
 {
@@ -104,5 +105,41 @@ class UserController extends Controller
 
         return redirect()->route('users.comments', ['user' => $user->id])
                          ->withStatus("You have commented on user '{$user->full_name}'");
+    }
+
+    public function notifications(User $user)
+    {
+        $this->authorize($user);
+
+        $notifications = $user->notifications;
+
+        return view('users.notifications', [
+            'notifications' => $notifications,
+        ]);
+    }
+
+    public function markAsRead(User $user, $id)
+    {
+        $notification = $user->notifications()->where('id', $id)->first();
+        $notification->markAsRead();
+
+        return redirect()->back();
+    }
+
+    public function markAsUnread(User $user, $id)
+    {
+        $notification = $user->notifications()->where('id', $id)->first();
+        $notification->markAsUnread();
+
+        return redirect()->back();
+    }
+
+    public function markAllRead(User $user)
+    {
+        $user->notifications()->each(function ($notification) {
+            $notification->markAsRead();
+        });
+
+        return redirect()->back();
     }
 }

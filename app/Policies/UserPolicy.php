@@ -45,4 +45,9 @@ class UserPolicy
 
         return false;
     }
+
+    public function notifications(User $user, User $model)
+    {
+        return $user->id === $model->id;
+    }
 }

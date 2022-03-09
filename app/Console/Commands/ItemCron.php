@@ -11,6 +11,8 @@ use App\Mail\ItemExpired;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\ItemStatusNotification;
 
 class ItemCron extends Command
 {
@@ -59,6 +61,7 @@ class ItemCron extends Command
                 // There is no buyer for this item.
                 $item->status = 'expired';
                 Mail::to($item->user)->send(new ItemExpired($item));
+                Notification::send($item->user, new ItemStatusNotification(($item)));
             } else {
                 foreach ($itemUsers as $itemUser) {
                     if ($itemUser->price > $item->starting_price && $itemUser->price > $highestPrice) {
@@ -71,11 +74,13 @@ class ItemCron extends Command
                 }
 
                 Mail::to($item->user)->send(new ItemSold($item));
+                Notification::send($item->user, new ItemStatusNotification(($item)));
             }
 
             $item->save();
             if ($item->buyer) {
                 Mail::to($item->buyer)->send(new ItemBought($item));
+                Notification::send($item->buyer, new ItemStatusNotification(($item)));
             }
         }
     }
