@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Traits\Statusable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class ItemUser extends Model
 {
-    use HasFactory;
+    use HasFactory,
+        Statusable;
 
     protected $table = 'item_user';
 

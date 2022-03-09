@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands;
 
-use Carbon\Carbon;
 use App\Models\Item;
 use App\Mail\ItemSold;
+use App\Models\Status;
 use App\Mail\ItemBought;
 use App\Models\ItemUser;
 use App\Mail\ItemExpired;
@@ -49,17 +49,17 @@ class ItemCron extends Command
     {
         Log::info("Item Cron is working fine!");
 
-        $items = Item::where('expires_at', '<=', Carbon::now())->where('status', 'active')->get();
+        $items = Item::expired()->active()->get();
 
         $highestPrice = 0;
         foreach($items as $item)
         {
             // Order by date of creation to start from oldest bids.
             // In case that there are multiple highest prices that are equeal, first user that bid will be used as a buyer.
-            $itemUsers = ItemUser::where('item_id', $item->id)->where('status', 'active')->orderBy('created_at', 'ASC')->get();
+            $itemUsers = ItemUser::where('item_id', $item->id)->active()->orderBy('created_at', 'ASC')->get();
             if (count($itemUsers) === 0) {
                 // There is no buyer for this item.
-                $item->status = 'expired';
+                $item->status()->associate(Status::expired()->first());
                 Mail::to($item->user)->send(new ItemExpired($item));
                 Notification::send($item->user, new ItemStatusNotification(($item)));
             } else {
@@ -69,7 +69,7 @@ class ItemCron extends Command
 
                         $item->final_price = $highestPrice;
                         $item->buyer_id = $itemUser->user->id;
-                        $item->status = 'sold';
+                        $item->status()->associate(Status::sold()->first());
                     }
                 }
 

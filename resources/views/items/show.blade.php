@@ -56,7 +56,7 @@
     </p>
 
     {{-- Displaying how much time is left until the item expires. --}}
-    @if ($item->status === 'active' && !$item->isExpired())
+    @if ($item->status->id === App\Models\Status::ACTIVE && !$item->isExpired())
       @php
         $days = \Carbon\Carbon::parse($item->expires_at)->diffInDays(\Carbon\Carbon::now());
         $hours = \Carbon\Carbon::parse($item->expires_at)->diffInHours(\Carbon\Carbon::now());
@@ -68,10 +68,10 @@
       @auth
         @if ($item->user->id === Auth::user()->id)
           {{-- In case that cron does not run yet --}}
-          @if ($item->isExpired() && $item->status === 'active')
+          @if ($item->isExpired() && $item->status->id === App\Models\Status::ACTIVE)
             <p>Status: on hold</p>
           @else
-            <p>Status: {{ $item->status}}</p>
+            <p>Status: {{ $item->status->name}}</p>
           @endif
         @endif
       @endauth
@@ -97,14 +97,14 @@
     @if ($item->user->id === Auth::user()->id)
       <div>
         <h3>Users that bid for this item</h3>
-        @if ($item->bidUsers()->where('status', 'active')->count())
+        @if ($item->bidUsers()->where('status_id', App\Models\Status::ACTIVE)->count())
           <ul>
             {{-- Only active bids will be displayed. --}}
-            @foreach ($item->bidUsers()->where('status', 'active')->get() as $bidUser)
+            @foreach ($item->bidUsers()->where('status_id', App\Models\Status::ACTIVE)->get() as $bidUser)
               <li>
                 <a href="{{ route('users.items.index', ['user' => $bidUser->id]) }}">{{ $bidUser->full_name }}</a>,
                 {{ $bidUser->bidItems()->where('item_id', $item->id)->first()->pivot->price }} RSD
-                @if ($item->status === 'sold' && $item->buyer->id === $bidUser->id)
+                @if ($item->status->id === App\Models\Status::SOLD && $item->buyer->id === $bidUser->id)
                   - bought this item!
                 @endif
               </li>

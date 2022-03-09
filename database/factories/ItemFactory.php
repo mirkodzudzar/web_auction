@@ -18,7 +18,7 @@ class ItemFactory extends Factory
             'name' => ucfirst($this->faker->word()),
             'description' => $this->faker->text(1000),
             'starting_price' => $this->faker->numberBetween(1, 1000000),
-            'status' => 'active',
+            // 'status' => 'active',
             'expires_at' => Carbon::now()->addDays(10),
         ];
     }

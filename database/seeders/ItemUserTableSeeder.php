@@ -3,8 +3,9 @@
 namespace Database\Seeders;
 
 use App\Models\Item;
-use App\Models\ItemUser;
 use App\Models\User;
+use App\Models\Status;
+use App\Models\ItemUser;
 use Illuminate\Database\Seeder;
 
 class ItemUserTableSeeder extends Seeder
@@ -22,7 +23,7 @@ class ItemUserTableSeeder extends Seeder
                     'item_id' => $item->id,
                     'user_id' => $user->id,
                     'price' => rand($item->starting_price + 1, 1000000),
-                    'status' => 'active',
+                    'status_id' => Status::ACTIVE,
                 ]);
             });
         });

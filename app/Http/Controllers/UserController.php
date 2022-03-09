@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Item;
 use App\Models\User;
+use App\Models\Status;
 use App\Models\Comment;
 use App\Http\Requests\UpdateUser;
 use App\Http\Requests\CreateComment;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Notification;
 
 class UserController extends Controller
 {
@@ -57,7 +56,7 @@ class UserController extends Controller
         $this->authorize($user);
 
         $items = $user->buyerItems()
-                      ->where('status', 'sold')
+                      ->where('status_id', Status::SOLD)
                       ->withImageAndBidUsersCount()
                       ->get();
 
@@ -72,7 +71,7 @@ class UserController extends Controller
         $this->authorize($user);
 
         $items = $user->items()
-                      ->where('status', 'sold')
+                      ->where('status_id', Status::SOLD)
                       ->withImageAndBidUsersCount()
                       ->get();
 

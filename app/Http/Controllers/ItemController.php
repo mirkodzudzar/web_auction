@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Item;
+use App\Models\Status;
 use App\Models\ItemUser;
+use App\Services\ItemService;
 use App\Http\Requests\StoreItem;
 use App\Http\Requests\SearchRequest;
-use App\Services\ItemService;
 use Illuminate\Support\Facades\Auth;
 
 class ItemController extends Controller
@@ -75,7 +76,7 @@ class ItemController extends Controller
     {
         $this->authorize($item);
 
-        $item->status = 'canceled';
+        $item->status()->associate(Status::canceled()->first());
         $item->save();
 
         return redirect()->back()
@@ -107,13 +108,12 @@ class ItemController extends Controller
     {
         $this->authorize($item);
 
-        $item->bidUsers()
-             ->where('user_id', Auth::user()->id)
-             ->first()
-             ->pivot
-             ->update([
-                 'status' => 'canceled',
-             ]);
+        $itemUser = ItemUser::where('item_id', $item->id)
+                            ->where('user_id', Auth::user()->id)
+                            ->first();
+        
+        $itemUser->status()->associate(Status::canceled()->first());
+        $itemUser->save();
 
         return redirect()->back()
                          ->withStatus("You have canceled your bid for item '{$item->name}'");

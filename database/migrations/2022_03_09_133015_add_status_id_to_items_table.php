@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddConditionToItemsTable extends Migration
+class AddStatusIdToItemsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,9 @@ class AddConditionToItemsTable extends Migration
     public function up()
     {
         Schema::table('items', function (Blueprint $table) {
-            $table->foreignId('condition_id')->constrained()->after('status');
+            $table->dropColumn('status');
+
+            $table->foreignId('status_id')->constrained()->after('final_price');
         });
     }
 
@@ -26,8 +28,10 @@ class AddConditionToItemsTable extends Migration
     public function down()
     {
         Schema::table('items', function (Blueprint $table) {
-            $table->dropForeign(['condition_id']);
-            $table->dropColumn('condition_id');
+            $table->dropForeign(['status_id']);
+            $table->dropColumn('status_id');
+
+            $table->string('status')->default('active'); // active, canceled, sold, expired
         });
     }
 }

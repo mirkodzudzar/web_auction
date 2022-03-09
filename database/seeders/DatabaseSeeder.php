@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Database\Seeders\StatusesTableSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -23,6 +24,7 @@ class DatabaseSeeder extends Seeder
             UsersTableSeeder::class,
             CategoriesTableSeeder::class,
             ConditionsTableSeeder::class,
+            StatusesTableSeeder::class,
             ItemsTableSeeder::class,
             ItemUserTableSeeder::class,
             PaymentsTableSeeder::class,

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use App\Scopes\NewestScope;
+use App\Traits\Statusable;
 use Laravel\Scout\Searchable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
@@ -13,7 +14,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Item extends Model
 {
     use HasFactory,
-        Searchable;
+        Searchable,
+        Statusable;
 
     protected $fillable = [
         'name',
@@ -68,7 +70,7 @@ class Item extends Model
     public function bidUsers()
     {
         return $this->belongsToMany(User::class)
-                    ->withPivot(['price', 'status']);
+                    ->withPivot(['price']);
     }
 
     public function image()
@@ -99,7 +101,12 @@ class Item extends Model
     public function scopeOnlyActiveItems(Builder $builder)
     {
         return $builder->whereDate('expires_at', '>', Carbon::now())
-                       ->where('status', '=', 'active');
+                       ->where('status_id', Status::ACTIVE);
+    }
+
+    public function scopeExpired(Builder $builder)
+    {
+        return $builder->whereDate('expires_at', '<=', Carbon::now());
     }
 
     public function isExpired()

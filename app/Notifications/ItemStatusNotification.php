@@ -59,7 +59,7 @@ class ItemStatusNotification extends Notification
         return [
             'item_id' => $this->item->id,
             'name' => $this->item->name,
-            'status' => $this->item->status,
+            'status' => $this->item->status->name,
         ];
     }
 }

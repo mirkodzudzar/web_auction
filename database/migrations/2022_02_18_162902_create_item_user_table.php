@@ -16,15 +16,8 @@ class CreateItemUserTable extends Migration
         Schema::create('item_user', function (Blueprint $table) {
             $table->id();
 
-            $table->unsignedBigInteger('item_id');
-            $table->foreign('item_id')
-                  ->references('id')
-                  ->on('items');
-
-            $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')
-                ->references('id')
-                ->on('users');
+            $table->foreignId('item_id')->constrained();
+            $table->foreignId('user_id')->constrained();
 
             $table->integer('price');
             $table->string('status')->default('active'); // active or canceled

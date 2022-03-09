@@ -16,15 +16,8 @@ class CreateDeliveryItemTable extends Migration
         Schema::create('delivery_item', function (Blueprint $table) {
             $table->id();
 
-            $table->unsignedBigInteger('delivery_id');
-            $table->foreign('delivery_id')
-                  ->references('id')
-                  ->on('deliveries');
-
-            $table->unsignedBigInteger('item_id');
-            $table->foreign('item_id')
-                ->references('id')
-                ->on('items');
+            $table->foreignId('delivery_id')->constrained();
+            $table->foreignId('item_id')->constrained();
 
             $table->timestamps();
         });

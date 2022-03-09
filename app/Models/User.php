@@ -60,7 +60,7 @@ class User extends Authenticatable
     public function bidItems()
     {
         return $this->belongsToMany(Item::class)
-                    ->withPivot(['price', 'status']);
+                    ->withPivot(['price']);
     }
 
     public function comments()

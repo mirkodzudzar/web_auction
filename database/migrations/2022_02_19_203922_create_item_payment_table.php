@@ -16,15 +16,8 @@ class CreateItemPaymentTable extends Migration
         Schema::create('item_payment', function (Blueprint $table) {
             $table->id();
 
-            $table->unsignedBigInteger('item_id');
-            $table->foreign('item_id')
-                  ->references('id')
-                  ->on('items');
-
-            $table->unsignedBigInteger('payment_id');
-            $table->foreign('payment_id')
-                ->references('id')
-                ->on('payments');
+            $table->foreignId('item_id')->constrained();
+            $table->foreignId('payment_id')->constrained();
 
             $table->timestamps();
         });
