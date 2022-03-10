@@ -18,8 +18,7 @@ class CreateCommentsTable extends Migration
 
             $table->foreignId('user_id')->constrained();
 
-            $table->unsignedBigInteger('commentator_id');
-            $table->foreign('commentator_id')
+            $table->foreignId('commentator_id')
                   ->references('id')
                   ->on('users');
 

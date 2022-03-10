@@ -19,11 +19,10 @@ class CreateItemsTable extends Migration
 
             $table->foreignId('user_id')->constrained();
             
-            $table->unsignedBigInteger('buyer_id')
-                  ->nullable();
-            $table->foreign('buyer_id')
+            $table->foreignId('buyer_id')
                   ->references('id')
-                  ->on('users');
+                  ->on('users')
+                  ->nullable();
 
             $table->string('name');
             $table->text('description');
