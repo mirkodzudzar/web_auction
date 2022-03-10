@@ -14,7 +14,9 @@ class AddConditionToItemsTable extends Migration
     public function up()
     {
         Schema::table('items', function (Blueprint $table) {
-            $table->foreignId('condition_id')->constrained()->after('status');
+            $table->foreignId('condition_id')
+                  ->after('status')
+                  ->constrained();
         });
     }
 

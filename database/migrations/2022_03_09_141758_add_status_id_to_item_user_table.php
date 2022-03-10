@@ -16,7 +16,9 @@ class AddStatusIdToItemUserTable extends Migration
         Schema::table('item_user', function (Blueprint $table) {
             $table->dropColumn('status');
 
-            $table->foreignId('status_id')->constrained()->after('price');
+            $table->foreignId('status_id')
+                  ->after('price')
+                  ->constrained();
         });
     }
 

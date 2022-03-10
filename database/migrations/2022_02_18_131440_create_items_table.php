@@ -20,9 +20,9 @@ class CreateItemsTable extends Migration
             $table->foreignId('user_id')->constrained();
             
             $table->foreignId('buyer_id')
+                  ->nullable()
                   ->references('id')
-                  ->on('users')
-                  ->nullable();
+                  ->on('users');
 
             $table->string('name');
             $table->text('description');

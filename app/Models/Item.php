@@ -70,7 +70,9 @@ class Item extends Model
     public function bidUsers()
     {
         return $this->belongsToMany(User::class)
-                    ->withPivot(['price']);
+                    ->withTimestamps()
+                    ->withPivot(['price'])
+                    ->using(ItemUser::class);
     }
 
     public function image()

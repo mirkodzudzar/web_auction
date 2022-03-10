@@ -14,7 +14,9 @@ class AddCategoryToItemsTable extends Migration
     public function up()
     {
         Schema::table('items', function (Blueprint $table) {
-            $table->foreignId('category_id')->constrained()->after('status');
+            $table->foreignId('category_id')
+                  ->after('status')
+                  ->constrained();
         });
     }
 

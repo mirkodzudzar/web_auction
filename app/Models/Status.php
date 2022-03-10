@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Status extends Model
@@ -18,30 +17,5 @@ class Status extends Model
     public function items()
     {
         return $this->hasMany(Item::class);
-    }
-
-    public function itemUsers()
-    {
-        return $this->hasMany(ItemUser::class);
-    }
-
-    public function scopeActive(Builder $builder)
-    {
-        return $builder->where('name', 'Active');
-    }
-
-    public function scopeCanceled(Builder $builder)
-    {
-        return $builder->where('name', 'Canceled');
-    }
-
-    public function scopeExpired(Builder $builder)
-    {
-        return $builder->where('name', 'Expired');
-    }
-
-    public function scopeSold(Builder $builder)
-    {
-        return $builder->where('name', 'Sold');
     }
 }

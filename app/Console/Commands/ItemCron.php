@@ -6,7 +6,6 @@ use App\Models\Item;
 use App\Mail\ItemSold;
 use App\Models\Status;
 use App\Mail\ItemBought;
-use App\Models\ItemUser;
 use App\Mail\ItemExpired;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
@@ -56,20 +55,21 @@ class ItemCron extends Command
         {
             // Order by date of creation to start from oldest bids.
             // In case that there are multiple highest prices that are equeal, first user that bid will be used as a buyer.
-            $itemUsers = ItemUser::where('item_id', $item->id)->active()->orderBy('created_at', 'ASC')->get();
+            $itemUsers = $item->bidUsers()->wherePivot('status_id', Status::ACTIVE)->orderBy('created_at', 'ASC')->get();
+
             if (count($itemUsers) === 0) {
                 // There is no buyer for this item.
-                $item->status()->associate(Status::expired()->first());
+                $item->status()->associate(Status::EXPIRED);
                 Mail::to($item->user)->send(new ItemExpired($item));
                 Notification::send($item->user, new ItemStatusNotification(($item)));
             } else {
                 foreach ($itemUsers as $itemUser) {
-                    if ($itemUser->price > $item->starting_price && $itemUser->price > $highestPrice) {
-                        $highestPrice = $itemUser->price;
+                    if ($itemUser->pivot->price > $item->starting_price && $itemUser->pivot->price > $highestPrice) {
+                        $highestPrice = $itemUser->pivot->price;
 
                         $item->final_price = $highestPrice;
-                        $item->buyer_id = $itemUser->user->id;
-                        $item->status()->associate(Status::sold()->first());
+                        $item->buyer()->associate($itemUser->id);
+                        $item->status()->associate(Status::SOLD);
                     }
                 }
 

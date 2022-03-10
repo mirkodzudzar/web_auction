@@ -15,6 +15,6 @@ class ItemUserObserver
      */
     public function creating(ItemUser $itemUser)
     {
-        $itemUser->status()->associate(Status::active()->first());
+        $itemUser->status()->associate(Status::ACTIVE);
     }
 }

@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Item;
 use App\Models\Status;
-use App\Models\ItemUser;
 use App\Services\ItemService;
 use App\Http\Requests\StoreItem;
 use App\Http\Requests\SearchRequest;
@@ -76,7 +75,7 @@ class ItemController extends Controller
     {
         $this->authorize($item);
 
-        $item->status()->associate(Status::canceled()->first());
+        $item->status()->associate(Status::CANCELED);
         $item->save();
 
         return redirect()->back()
@@ -91,14 +90,7 @@ class ItemController extends Controller
         $rules['price'] = "required|integer|gt:{$item->starting_price}";
         $validated = request()->validate($rules);
 
-        $itemUser = ItemUser::make([
-            'price' => $validated['price'],
-        ]);
-
-        $itemUser->item()->associate($item);
-        $itemUser->user()->associate(Auth::user());
-
-        $itemUser->save();
+        $item->bidUsers()->attach(Auth::user()->id, ['price' => $validated['price']]);
 
         return redirect()->back()
                          ->withStatus('You have bid for this item!');
@@ -108,12 +100,7 @@ class ItemController extends Controller
     {
         $this->authorize($item);
 
-        $itemUser = ItemUser::where('item_id', $item->id)
-                            ->where('user_id', Auth::user()->id)
-                            ->first();
-        
-        $itemUser->status()->associate(Status::canceled()->first());
-        $itemUser->save();
+        $item->bidUsers()->updateExistingPivot(Auth::user()->id, ['status_id' => Status::CANCELED]);
 
         return redirect()->back()
                          ->withStatus("You have canceled your bid for item '{$item->name}'");

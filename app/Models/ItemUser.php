@@ -3,25 +3,11 @@
 namespace App\Models;
 
 use App\Traits\Statusable;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class ItemUser extends Model
+class ItemUser extends Pivot
 {
     use HasFactory,
-        Statusable;
-
-    protected $table = 'item_user';
-
-    protected $fillable = ['price'];
-
-    public function item()
-    {
-        return $this->belongsTo(Item::class);
-    }
-
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
+        Statusable; // use Trait to extend Status relationship
 }

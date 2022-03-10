@@ -10,7 +10,7 @@ class ItemObserver
 {
     public function creating(Item $item)
     {
-        $item->status()->associate(Status::active()->first());
+        $item->status()->associate(Status::ACTIVE);
         $item->expires_at = Carbon::now()->addDays(10);
     }
 }
