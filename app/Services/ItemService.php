@@ -12,7 +12,7 @@ use Intervention\Image\Facades\Image as InterventionImage;
 
 class ItemService
 {
-  public static function store(array $data) : Item
+  public function store(array $data) : Item
   {
     $user = User::findOrFail(Auth::user()->id);
     // We are not saving new item yet just because we firstly need to relate categories and conditions to it.

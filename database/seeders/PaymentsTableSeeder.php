@@ -18,7 +18,7 @@ class PaymentsTableSeeder extends Seeder
         Payment::factory(5)->create();
 
         Item::all()->each(function (Item $item) {
-            $item->payments()->sync(Payment::inRandomOrder()->take(1)->get()->pluck('id'));
+            $item->payments()->sync(Payment::inRandomOrder()->first()->pluck('id'));
         });
     }
 }

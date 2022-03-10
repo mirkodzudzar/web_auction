@@ -62,7 +62,7 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Item::class)
                     ->withTimestamps()
-                    ->withPivot(['price'])
+                    ->withPivot(['price', 'status_id'])
                     ->using(ItemUser::class);
     }
 

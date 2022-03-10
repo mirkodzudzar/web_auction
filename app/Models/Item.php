@@ -71,7 +71,7 @@ class Item extends Model
     {
         return $this->belongsToMany(User::class)
                     ->withTimestamps()
-                    ->withPivot(['price'])
+                    ->withPivot(['price', 'status_id'])
                     ->using(ItemUser::class);
     }
 

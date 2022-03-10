@@ -48,9 +48,9 @@ class ItemController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreItem $request)
+    public function store(StoreItem $request, ItemService $itemService)
     {
-        $item = ItemService::store($request->validated());
+        $item = $itemService->store($request->validated());
 
         return redirect()->route('items.show', ['item' => $item->id])
                          ->withStatus("You have published new item!");
