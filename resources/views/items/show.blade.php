@@ -112,4 +112,9 @@
       </div>
     @endif
   @endauth
+  
+  @can('calculate', $item)
+    <a href="{{ route('invoices.calculate', ['item' => $item]) }}">View invoice with calculations</a>  
+  @endcan
+
 @endsection

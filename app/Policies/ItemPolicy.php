@@ -81,4 +81,16 @@ class ItemPolicy
 
         return false;
     }
+
+    public function calculate(User $user, Item $item)
+    {
+        if (is_null($item->buyer)) return false;
+
+        if ($item->user->id === $user->id || $item->buyer->id === $user->id)
+        {
+            return true;
+        }
+
+        return false;
+    }
 }

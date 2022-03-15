@@ -1,10 +1,11 @@
 <?php
 
-use App\Http\Controllers\CategoryController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\InvoicesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -46,6 +47,9 @@ Route::resource('items', ItemController::class)->only(['create', 'store', 'show'
 
 /** CategoryController routes */
 Route::resource('categories', CategoryController::class)->only(['show']);
+
+/** InvoicesController routes */
+Route::get('items/{item}/invoice', [InvoicesController::class, 'calculate'])->name('invoices.calculate');
 
 /** Auth routes */
 Auth::routes(['reset' => false]);
