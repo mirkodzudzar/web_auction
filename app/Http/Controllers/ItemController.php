@@ -77,8 +77,7 @@ class ItemController extends Controller
         $item->status()->associate(Status::CANCELED);
         $item->save();
 
-        return redirect()->back()
-                         ->withStatus("You have canceled your item '{$item->name}'");
+        return back()->withStatus("You have canceled your item '{$item->name}'");
     }
 
     public function bid(Item $item)
@@ -91,8 +90,7 @@ class ItemController extends Controller
 
         $item->bidUsers()->attach(auth()->id(), ['price' => $validated['price']]);
 
-        return redirect()->back()
-                         ->withStatus('You have bid for this item!');
+        return back()->withStatus('You have bid for this item!');
     }
 
     public function cancelBid(Item $item)

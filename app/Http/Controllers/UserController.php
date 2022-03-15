@@ -7,7 +7,6 @@ use App\Models\Status;
 use App\Models\Comment;
 use App\Http\Requests\UpdateUser;
 use App\Http\Requests\CreateComment;
-use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -30,12 +29,11 @@ class UserController extends Controller
         $this->authorize($user);
         
         $validated = $request->validated();
-        $validated['password'] = is_null($validated['password']) ? $user->password : Hash::make($validated['password']);
+        $validated['password'] = is_null($validated['password']) ? $user->password : bcrypt($validated['password']);
 
         $user->update($validated);
 
-        return redirect()->back()
-                         ->withStatus('Your profile has been updated.');
+        return back()->withStatus('Your profile has been updated.');
     }
 
     public function itemsIndex(User $user)
@@ -121,7 +119,7 @@ class UserController extends Controller
         $notification = $user->notifications()->where('id', $id)->first();
         $notification->markAsRead();
 
-        return redirect()->back();
+        return back();
     }
 
     public function markAsUnread(User $user, $id)
@@ -129,7 +127,7 @@ class UserController extends Controller
         $notification = $user->notifications()->where('id', $id)->first();
         $notification->markAsUnread();
 
-        return redirect()->back();
+        return back();
     }
 
     public function markAllRead(User $user)
@@ -138,6 +136,6 @@ class UserController extends Controller
             $notification->markAsRead();
         });
 
-        return redirect()->back();
+        return back();
     }
 }
