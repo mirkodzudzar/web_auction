@@ -66,11 +66,6 @@ class User extends Authenticatable
                     ->using(ItemUser::class);
     }
 
-    public function scopeActive(Builder $builder)
-    {
-        return $builder->wherePivot('status_id', Status::CANCELED);
-    }
-
     public function comments()
     {
         return $this->hasMany(Comment::class);

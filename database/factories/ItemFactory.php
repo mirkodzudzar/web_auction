@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class ItemFactory extends Factory
@@ -18,7 +17,7 @@ class ItemFactory extends Factory
             'name' => ucfirst($this->faker->word()),
             'description' => $this->faker->text(1000),
             'starting_price' => $this->faker->numberBetween(1, 1000000),
-            'expires_at' => Carbon::now()->addDays(10),
+            'expires_at' => now()->addDays(10),
         ];
     }
 }

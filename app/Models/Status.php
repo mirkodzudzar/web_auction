@@ -18,4 +18,14 @@ class Status extends Model
     {
         return $this->hasMany(Item::class);
     }
+
+    public function isActive()
+    {
+        return ($this->id === self::ACTIVE) ? true : false;
+    }
+
+    public function isSold()
+    {
+        return ($this->id === self::SOLD) ? true : false;
+    }
 }

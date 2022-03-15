@@ -3,8 +3,8 @@
 namespace App\Models;
 
 use Carbon\Carbon;
-use App\Scopes\NewestScope;
 use App\Traits\Statusable;
+use App\Scopes\NewestScope;
 use Laravel\Scout\Searchable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
@@ -102,18 +102,18 @@ class Item extends Model
 
     public function scopeOnlyActiveItems(Builder $builder)
     {
-        return $builder->whereDate('expires_at', '>', Carbon::now())
+        return $builder->whereDate('expires_at', '>', now())
                        ->where('status_id', Status::ACTIVE);
     }
 
     public function scopeExpired(Builder $builder)
     {
-        return $builder->whereDate('expires_at', '<=', Carbon::now());
+        return $builder->whereDate('expires_at', '<=', now());
     }
 
     public function isExpired()
     {
-        if (Carbon::parse($this->expires_at) <= Carbon::now()) {
+        if (Carbon::parse($this->expires_at) <= now()) {
             return true;
         }
 
@@ -124,6 +124,16 @@ class Item extends Model
     {
         return $builder->with('image')
                        ->withCount('bidUsers');
+    }
+
+    public function expirationTime()
+    {
+        $days = Carbon::parse($this->expires_at)->diffInDays(now());
+        $hours = Carbon::parse($this->expires_at)->diffInHours(now());
+        $minutes = Carbon::parse($this->expires_at)->diffInMinutes(now());
+        $seconds = Carbon::parse($this->expires_at)->diffInSeconds(now());
+    
+        return $days !== 0 ? "$days day(s)" : ($hours !== 0 ? "$hours hour(s)" : ($minutes !== 0 ? "$minutes minute(s)" : "$seconds second(s)" ));
     }
 
     public static function boot()

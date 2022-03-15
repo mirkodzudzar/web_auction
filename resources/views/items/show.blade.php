@@ -56,19 +56,13 @@
     </p>
 
     {{-- Displaying how much time is left until the item expires. --}}
-    @if ($item->status->id === App\Models\Status::ACTIVE && !$item->isExpired())
-      @php
-        $days = \Carbon\Carbon::parse($item->expires_at)->diffInDays(\Carbon\Carbon::now());
-        $hours = \Carbon\Carbon::parse($item->expires_at)->diffInHours(\Carbon\Carbon::now());
-        $minutes = \Carbon\Carbon::parse($item->expires_at)->diffInMinutes(\Carbon\Carbon::now());
-        $seconds = \Carbon\Carbon::parse($item->expires_at)->diffInSeconds(\Carbon\Carbon::now());
-      @endphp
-      <p>Auction will end in: {{ $days !== 0 ? "$days day(s)" : ($hours !== 0 ? "$hours hour(s)" : ($minutes !== 0 ? "$minutes minute(s)" : "$seconds second(s)" )) }}</p>
+    @if ($item->status->isActive() && !$item->isExpired())
+      <p>Auction will end in: {{ $item->expirationTime() }}</p>
     @else
       @auth
         @if ($item->user->id === Auth::user()->id)
           {{-- In case that cron does not run yet --}}
-          @if ($item->isExpired() && $item->status->id === App\Models\Status::ACTIVE)
+          @if ($item->isExpired() && $item->status->isActive())
             <p>Status: on hold</p>
           @else
             <p>Status: {{ $item->status->name}}</p>
@@ -97,22 +91,24 @@
     @if ($item->user->id === Auth::user()->id)
       <div>
         <h3>Users that bid for this item</h3>
-        @if ($item->bidUsers()->where('status_id', App\Models\Status::ACTIVE)->count())
-          <ul>
-            {{-- Only active bids will be displayed. --}}
-            @foreach ($item->bidUsers()->where('status_id', App\Models\Status::ACTIVE)->get() as $bidUser)
-              <li>
-                <a href="{{ route('users.items.index', ['user' => $bidUser->id]) }}">{{ $bidUser->full_name }}</a>,
-                {{ $bidUser->bidItems()->where('item_id', $item->id)->first()->pivot->price }} RSD
-                @if ($item->status->id === App\Models\Status::SOLD && $item->buyer->id === $bidUser->id)
-                  - bought this item!
+        <ul>
+            @forelse ($item->bidUsers()->get() as $bidUser)
+                {{-- Only active bids will be displayed. --}}
+                @if ($bidUser->pivot->status->isActive())
+                    <li>
+                        <a href="{{ route('users.items.index', ['user' => $bidUser->id]) }}">{{ $bidUser->full_name }}</a>,
+                        {{ $bidUser->pivot->price }} RSD
+                        @if ($item->status->isSold() && $item->buyer->id === $bidUser->id)
+                            - bought this item!
+                        @endif
+                    </li>
+                @else
+                    <li>No users yet.</li>
                 @endif
-              </li>
-            @endforeach
-          </ul>
-        @else
-          <p>No users yet.</p>
-        @endif
+            @empty
+                <li>No users yet.</li>
+            @endforelse
+        </ul>
       </div>
     @endif
   @endauth

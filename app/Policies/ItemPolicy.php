@@ -21,14 +21,14 @@ class ItemPolicy
      */
     public function view(?User $user, Item $item)
     {
-        if ($item->status->id === Status::SOLD) {
+        if ($item->status->isSold()) {
             if(is_null($user)) return false;
             
             // Only owner and buyer are able to visit sold item.
             return $user->id === $item->user->id || $user->id === $item->buyer->id;
         }
 
-        if ($item->status->id !== Status::ACTIVE || $item->isExpired()) {
+        if (!$item->status->isActive() || $item->isExpired()) {
             // If we are guest, we can not visit item that is not active or expired.
             if(is_null($user)) return false;
 
@@ -40,7 +40,7 @@ class ItemPolicy
     
     public function cancelItem(User $user, Item $item)
     {
-        if ($item->status->id === Status::ACTIVE && !$item->isExpired()) {
+        if ($item->status->isActive() && !$item->isExpired()) {
             return $user->id === $item->user->id;
         }
 
@@ -52,7 +52,7 @@ class ItemPolicy
         // You can not bid for your own item.
         if ($item->user->id === $user->id) return false;
 
-        if ($item->status->id === Status::ACTIVE && !$item->isExpired()) {
+        if ($item->status->isActive() && !$item->isExpired()) {
             $itemUser = $item->bidUsers()
                              ->where('user_id', $user->id)
                              ->first();
@@ -70,7 +70,7 @@ class ItemPolicy
         // You can not cancel bid for your own item.
         if ($item->user->id === $user->id) return false;
 
-        if ($item->status->id === Status::ACTIVE && !$item->isExpired()) {
+        if ($item->status->isActive() && !$item->isExpired()) {
             $itemUser = $item->bidUsers()
                              ->where('user_id', $user->id)
                              ->where('status_id', Status::ACTIVE)
