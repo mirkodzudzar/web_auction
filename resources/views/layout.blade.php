@@ -28,13 +28,13 @@
               <li><a href="{{ route('login') }}">Login</a></li>
               <li><a href="{{ route('register') }}">Register</a></li>
             @else
-              <li><a href="{{ route('users.edit', ['user' => Auth::user()->id]) }}">Edit profile</a></li>
+              <li><a href="{{ route('users.edit', ['user' => auth()->id()]) }}">Edit profile</a></li>
               <li><a href="{{ route('items.create') }}">Add item</a></li>
-              <li><a href="{{ route('users.items.index', ['user' => Auth::user()->id]) }}">Your items</a></li>
-              <li><a href="{{ route('users.items.bought', ['user' => Auth::user()->id]) }}">Bought items</a></li>
-              <li><a href="{{ route('users.items.sold', ['user' => Auth::user()->id]) }}">Sold items</a></li>
-              <li><a href="{{ route('users.comments', ['user' => Auth::user()->id]) }}">Comments about you</a></li>
-              <li><a href="{{ route('users.notifications', ['user' => Auth::user()->id]) }}">Notifications</a></li>
+              <li><a href="{{ route('users.items.index', ['user' => auth()->id()]) }}">Your items</a></li>
+              <li><a href="{{ route('users.items.bought', ['user' => auth()->id()]) }}">Bought items</a></li>
+              <li><a href="{{ route('users.items.sold', ['user' => auth()->id()]) }}">Sold items</a></li>
+              <li><a href="{{ route('users.comments', ['user' => auth()->id()]) }}">Comments about you</a></li>
+              <li><a href="{{ route('users.notifications', ['user' => auth()->id()]) }}">Notifications</a></li>
               <li><a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit()">Logout</a></li>
               <form action="{{ route('logout') }}" id="logout-form" method="POST" style="display: none">
                 @csrf

@@ -7,7 +7,6 @@ use App\Models\Status;
 use App\Services\ItemService;
 use App\Http\Requests\StoreItem;
 use App\Http\Requests\SearchRequest;
-use Illuminate\Support\Facades\Auth;
 
 class ItemController extends Controller
 {
@@ -90,7 +89,7 @@ class ItemController extends Controller
         $rules['price'] = "required|integer|gt:{$item->starting_price}";
         $validated = request()->validate($rules);
 
-        $item->bidUsers()->attach(Auth::user()->id, ['price' => $validated['price']]);
+        $item->bidUsers()->attach(auth()->id(), ['price' => $validated['price']]);
 
         return redirect()->back()
                          ->withStatus('You have bid for this item!');
@@ -100,7 +99,7 @@ class ItemController extends Controller
     {
         $this->authorize($item);
 
-        $item->bidUsers()->updateExistingPivot(Auth::user()->id, ['status_id' => Status::CANCELED]);
+        $item->bidUsers()->updateExistingPivot(auth()->id(), ['status_id' => Status::CANCELED]);
 
         return redirect()->back()
                          ->withStatus("You have canceled your bid for item '{$item->name}'");

@@ -7,7 +7,6 @@ use App\Models\Status;
 use App\Models\Comment;
 use App\Http\Requests\UpdateUser;
 use App\Http\Requests\CreateComment;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
@@ -98,7 +97,7 @@ class UserController extends Controller
         ]);
         
         $comment->user()->associate($user);
-        $comment->commentator()->associate(Auth::user());
+        $comment->commentator()->associate(auth()->user());
 
         $comment->save();
 

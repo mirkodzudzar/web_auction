@@ -21,7 +21,7 @@
       </form>
     @elsecan('cancelBid', $item)
       <div>
-        <p>Your price: {{ $item->bidUsers()->where('user_id', Auth::user()->id)->first()->pivot->price }} RSD</p>
+        <p>Your price: {{ $item->bidUsers()->where('user_id', auth()->id())->first()->pivot->price }} RSD</p>
         <form action="{{ route('items.cancel_bid', ['item' => $item->id]) }}" method="POST">
           @csrf
           <button type="submit">Cancel your bid</button>
@@ -29,9 +29,9 @@
       </div>
     @else
       @auth
-        @if ($item->buyer && $item->buyer->id === Auth::user()->id)
+        @if ($item->buyer && $item->buyer->id === auth()->id())
           <p>Your price: {{ $item->final_price }} RSD</p>
-        @elseif ($item->user->id !== Auth::user()->id)
+        @elseif ($item->user->id !== auth()->id())
           <p>You can not bid for this item!</p>
         @endif
       @endauth
@@ -60,7 +60,7 @@
       <p>Auction will end in: {{ $item->expirationTime() }}</p>
     @else
       @auth
-        @if ($item->user->id === Auth::user()->id)
+        @if ($item->user->id === auth()->id())
           {{-- In case that cron does not run yet --}}
           @if ($item->isExpired() && $item->status->isActive())
             <p>Status: on hold</p>
@@ -88,7 +88,7 @@
     @endcan
   </div>
   @auth
-    @if ($item->user->id === Auth::user()->id)
+    @if ($item->user->id === auth()->id())
       <div>
         <h3>Users that bid for this item</h3>
         <ul>

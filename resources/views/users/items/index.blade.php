@@ -16,7 +16,7 @@
         <button type="submit">Add comment</button>
       </form>
     @else
-      @if (Auth::user()->id !== $user->id)
+      @if (auth()->id() !== $user->id)
         <p>You have already commented on this user.</p>      
       @endif
     @endcan

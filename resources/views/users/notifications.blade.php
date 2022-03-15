@@ -15,15 +15,15 @@
         has been changed to <b>{{ $notification->data['status'] }}</b>
         {{ $notification->created_at->diffForHumans() }}.
         @if ($notification->unread())
-          <a href="{{ route('users.notifications.markAsRead', ['user' => Auth::user(), 'id' => $notification->id]) }}">Mark as read</a>
+          <a href="{{ route('users.notifications.markAsRead', ['user' => auth()->id(), 'id' => $notification->id]) }}">Mark as read</a>
         @else
-          <a href="{{ route('users.notifications.markAsUnread', ['user' => Auth::user(), 'id' => $notification->id]) }}">Mark as unread</a>
+          <a href="{{ route('users.notifications.markAsUnread', ['user' => auth()->id(), 'id' => $notification->id]) }}">Mark as unread</a>
         @endif
       </p>
       @if (!$loop->last)
         <hr>
       @else
-        <a href="{{ route('users.notifications.markAllRead', ['user' => Auth::user()->id]) }}">Mark all read</a>
+        <a href="{{ route('users.notifications.markAllRead', ['user' => auth()->id()]) }}">Mark all read</a>
       @endif
     </div>
   @empty

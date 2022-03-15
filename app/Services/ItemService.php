@@ -5,7 +5,6 @@ namespace App\Services;
 use App\Models\Item;
 use App\Models\User;
 use App\Models\Image;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image as InterventionImage;
@@ -14,7 +13,7 @@ class ItemService
 {
   public function store(array $data) : Item
   {
-    $user = User::findOrFail(Auth::user()->id);
+    $user = User::findOrFail(auth()->id());
     // We are not saving new item yet just because we firstly need to relate categories and conditions to it.
     $item = $user->items()->make($data);
     $item->category()->associate($data['category']);
