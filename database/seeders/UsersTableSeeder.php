@@ -14,7 +14,16 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
-        User::factory(10)->create();
+        // This gives us possibility to store bunch of data faster.
+        for ($i = 0; $i < 20; $i++) {
+            $data[] = User::factory()->definition();
+        }
+        $chunks = array_chunk($data, 10);
+        foreach ($chunks as $chunk) {
+            // We can even insert data which is much faster, but than we need to add values for timestamps also.
+            User::insert($chunk);
+        }
+
         User::factory()->randomUser()->create();
     }
 }

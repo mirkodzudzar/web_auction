@@ -18,9 +18,9 @@ class ItemsTableSeeder extends Seeder
     public function run()
     {
         Item::factory(50)->make()->each(function (Item $item) {
-            $item->category()->associate(Category::inRandomOrder()->first());
-            $item->user()->associate(User::inRandomOrder()->first());
-            $item->condition()->associate(Condition::inRandomOrder()->first());
+            $item->category()->associate(Category::inRandomOrder()->first()->id);
+            $item->user()->associate(User::inRandomOrder()->first()->id);
+            $item->condition()->associate(Condition::inRandomOrder()->first()->id);
             $item->save();
         });
     }

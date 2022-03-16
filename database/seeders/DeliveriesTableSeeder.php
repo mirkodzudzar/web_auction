@@ -23,7 +23,7 @@ class DeliveriesTableSeeder extends Seeder
             $delivery->save();
         });
 
-        Item::all()->each(function (Item $item) {
+        Item::each(function (Item $item) {
             $item->deliveries()->sync(Delivery::inRandomOrder()->take(2)->get()->pluck('id'));
         });
     }

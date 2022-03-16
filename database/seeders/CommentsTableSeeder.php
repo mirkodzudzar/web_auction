@@ -19,8 +19,8 @@ class CommentsTableSeeder extends Seeder
             User::all()->each(function(User $user) use ($commentator) {
                 if ($commentator->id !== $user->id) {
                     $comment = Comment::factory()->make();
-                    $comment->user()->associate($user);
-                    $comment->commentator()->associate($commentator);
+                    $comment->user()->associate($user->id);
+                    $comment->commentator()->associate($commentator->id);
                     $comment->save();
                 }
             });

@@ -18,10 +18,9 @@ class ItemUserTableSeeder extends Seeder
         User::all()->each(function (User $user) {
             // This is faster, but we need whole Item object to get 'starting_price' value.
             // $items = Item::where('user_id', "!=", $user->id)->inRandomOrder()->take(5)->pluck('id');
-            $items = Item::where('user_id', "!=", $user->id)->inRandomOrder()->take(5)->get();
-            foreach ($items as $item) {
+            Item::where('user_id', "!=", $user->id)->inRandomOrder()->take(5)->each(function (Item $item) use ($user) {
                 $user->bidItems()->attach($item->id, ['price' => rand($item->starting_price + 1, 1000000)]);
-            }
+            });
         });
     }
 }
