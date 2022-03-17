@@ -4,7 +4,6 @@ namespace App\Policies;
 
 use App\Models\Item;
 use App\Models\User;
-use App\Models\Status;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class ItemPolicy
@@ -21,14 +20,14 @@ class ItemPolicy
      */
     public function view(?User $user, Item $item)
     {
-        if ($item->status->isSold()) {
+        if ($item->isSold()) {
             if(is_null($user)) return false;
             
             // Only owner and buyer are able to visit sold item.
             return $user->id === $item->user->id || $user->id === $item->buyer->id;
         }
 
-        if (!$item->status->isActive() || $item->isExpired()) {
+        if (!$item->isActive() || $item->isExpired()) {
             // If we are guest, we can not visit item that is not active or expired.
             if(is_null($user)) return false;
 
@@ -40,7 +39,7 @@ class ItemPolicy
     
     public function cancelItem(User $user, Item $item)
     {
-        if ($item->status->isActive() && !$item->isExpired()) {
+        if ($item->isActive() && !$item->isExpired()) {
             return $user->id === $item->user->id;
         }
 
@@ -52,7 +51,7 @@ class ItemPolicy
         // You can not bid for your own item.
         if ($item->user->id === $user->id) return false;
 
-        if ($item->status->isActive() && !$item->isExpired()) {
+        if ($item->isActive() && !$item->isExpired()) {
             $itemUser = $item->bidUsers()
                              ->where('user_id', $user->id)
                              ->first();
@@ -70,10 +69,10 @@ class ItemPolicy
         // You can not cancel bid for your own item.
         if ($item->user->id === $user->id) return false;
 
-        if ($item->status->isActive() && !$item->isExpired()) {
+        if ($item->isActive() && !$item->isExpired()) {
             $itemUser = $item->bidUsers()
                              ->where('user_id', $user->id)
-                             ->where('status_id', Status::ACTIVE)
+                             ->onlyActiveBidItemUsers()
                              ->first();
             // Will return true if we have bid already.
             return isset($itemUser);

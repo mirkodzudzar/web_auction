@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Item;
-use App\Models\Status;
 use App\Services\ItemService;
 use App\Http\Requests\StoreItem;
 use App\Http\Requests\SearchRequest;
@@ -74,7 +73,7 @@ class ItemController extends Controller
     {
         $this->authorize($item);
 
-        $item->status()->associate(Status::CANCELED);
+        $item->status()->associate(Item::$canceled);
         $item->save();
 
         return back()->withStatus("You have canceled your item '{$item->name}'");
@@ -97,7 +96,7 @@ class ItemController extends Controller
     {
         $this->authorize($item);
 
-        $item->bidUsers()->updateExistingPivot(auth()->id(), ['status_id' => Status::CANCELED]);
+        $item->bidUsers()->updateExistingPivot(auth()->id(), ['status_id' => Item::$canceled]);
 
         return redirect()->back()
                          ->withStatus("You have canceled your bid for item '{$item->name}'");

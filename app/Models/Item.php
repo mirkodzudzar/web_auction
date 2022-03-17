@@ -17,6 +17,9 @@ class Item extends Model
         Searchable,
         Statusable;
 
+    public static $expired = 3;
+    public static $sold = 4;
+
     protected $fillable = [
         'name',
         'description',
@@ -25,29 +28,11 @@ class Item extends Model
         'delivery_method',
     ];
 
-    /**
-     * Only name and description, payment and delivery will be searchable for items,
-     * first_name, last_name and email will be searchable for item related user,
-     * and even full_name that we are getting as a concatenation of two fields...
-     */
-    public function toSearchableArray()
+    public static function boot()
     {
-        $array = $this->toArray();
+        static::addGlobalScope(new NewestScope);
 
-        $array['item'] = $this->only('name', 'description');
-
-        // Too many queries...
-        $array['item_payments'] = $this->payments->map(function ($array) {
-            return $array['name'];
-        })->toArray();
-        // Too many queries...
-        $array['item_deliveries'] = $this->deliveries->map(function ($array) {
-            return $array['name'];
-        })->toArray();
-        // Too many queries...
-        $array['item_user'] = $this->user->only('full_name', 'first_name', 'last_name', 'email');
-
-        return $array;
+        parent::boot();
     }
 
     public function getThumbnailAttribute()
@@ -100,15 +85,34 @@ class Item extends Model
         return $this->belongsTo(Condition::class);
     }
 
-    public function scopeOnlyActiveItems(Builder $builder)
+    /**
+     * Only name and description, payment and delivery will be searchable for items,
+     * first_name, last_name and email will be searchable for item related user,
+     * and even full_name that we are getting as a concatenation of two fields...
+     */
+    public function toSearchableArray()
     {
-        return $builder->whereDate('expires_at', '>', now())
-                       ->where('status_id', Status::ACTIVE);
+        $array = $this->toArray();
+
+        $array['item'] = $this->only('name', 'description');
+
+        // Too many queries...
+        $array['item_payments'] = $this->payments->map(function ($array) {
+            return $array['name'];
+        })->toArray();
+        // Too many queries...
+        $array['item_deliveries'] = $this->deliveries->map(function ($array) {
+            return $array['name'];
+        })->toArray();
+        // Too many queries...
+        $array['item_user'] = $this->user->only('full_name', 'first_name', 'last_name', 'email');
+
+        return $array;
     }
 
-    public function scopeExpired(Builder $builder)
+    public function isSold()
     {
-        return $builder->whereDate('expires_at', '<=', now());
+        return ($this->status->id === self::$sold) ? true : false;
     }
 
     public function isExpired()
@@ -118,12 +122,6 @@ class Item extends Model
         }
 
         return false;
-    }
-
-    public function scopeWithImageAndBidUsersCount(Builder $builder)
-    {
-        return $builder->with('image')
-                       ->withCount('bidUsers');
     }
 
     public function expirationTime()
@@ -136,10 +134,25 @@ class Item extends Model
         return $days !== 0 ? "$days day(s)" : ($hours !== 0 ? "$hours hour(s)" : ($minutes !== 0 ? "$minutes minute(s)" : "$seconds second(s)" ));
     }
 
-    public static function boot()
+    public function scopeOnlyActiveItems(Builder $builder)
     {
-        static::addGlobalScope(new NewestScope);
+        return $builder->whereDate('expires_at', '>', now())
+                       ->where('status_id', self::$active);
+    }
 
-        parent::boot();
+    public function scopeOnlySoldItems(Builder $builder)
+    {
+        return $builder->where('status_id', self::$sold);
+    }
+
+    public function scopeWithImageAndBidUsersCount(Builder $builder)
+    {
+        return $builder->with('image')
+                       ->withCount('bidUsers');
+    }
+
+    public function scopeExpired(Builder $builder)
+    {
+        return $builder->whereDate('expires_at', '<=', now());
     }
 }

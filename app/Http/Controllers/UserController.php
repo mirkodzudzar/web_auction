@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Models\Status;
 use App\Models\Comment;
 use App\Http\Requests\UpdateUser;
 use App\Http\Requests\CreateComment;
@@ -53,7 +52,7 @@ class UserController extends Controller
         $this->authorize($user);
 
         $items = $user->buyerItems()
-                      ->where('status_id', Status::SOLD)
+                      ->onlySoldItems()
                       ->withImageAndBidUsersCount()
                       ->get();
 
@@ -68,7 +67,7 @@ class UserController extends Controller
         $this->authorize($user);
 
         $items = $user->items()
-                      ->where('status_id', Status::SOLD)
+                      ->onlySoldItems()
                       ->withImageAndBidUsersCount()
                       ->get();
 
@@ -95,7 +94,7 @@ class UserController extends Controller
         ]);
         
         $comment->user()->associate($user);
-        $comment->commentator()->associate(auth()->user());
+        $comment->commentator()->associate(auth()->id());
 
         $comment->save();
 

@@ -4,7 +4,6 @@ namespace App\Console\Commands;
 
 use App\Models\Item;
 use App\Mail\ItemSold;
-use App\Models\Status;
 use App\Mail\ItemBought;
 use App\Mail\ItemExpired;
 use Illuminate\Console\Command;
@@ -55,11 +54,11 @@ class ItemCron extends Command
         {
             // Order by date of creation to start from oldest bids.
             // In case that there are multiple highest prices that are equeal, first user that bid will be used as a buyer.
-            $itemUsers = $item->bidUsers()->wherePivot('status_id', Status::ACTIVE)->orderBy('created_at', 'ASC')->get();
+            $itemUsers = $item->bidUsers()->onlyActiveBidItemUsers()->orderBy('created_at', 'ASC')->get();
 
             if (count($itemUsers) === 0) {
                 // There is no buyer for this item.
-                $item->status()->associate(Status::EXPIRED);
+                $item->status()->associate(Item::$expired);
                 Mail::to($item->user)->send(new ItemExpired($item));
                 Notification::send($item->user, new ItemStatusNotification(($item)));
             } else {
@@ -69,7 +68,7 @@ class ItemCron extends Command
 
                         $item->final_price = $highestPrice;
                         $item->buyer()->associate($itemUser->id);
-                        $item->status()->associate(Status::SOLD);
+                        $item->status()->associate(Item::$sold);
                     }
                 }
 

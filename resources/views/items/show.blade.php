@@ -56,13 +56,13 @@
     </p>
 
     {{-- Displaying how much time is left until the item expires. --}}
-    @if ($item->status->isActive() && !$item->isExpired())
+    @if ($item->isActive() && !$item->isExpired())
       <p>Auction will end in: {{ $item->expirationTime() }}</p>
     @else
       @auth
         @if ($item->user->id === auth()->id())
           {{-- In case that cron does not run yet --}}
-          @if ($item->isExpired() && $item->status->isActive())
+          @if ($item->isExpired() && $item->isActive())
             <p>Status: on hold</p>
           @else
             <p>Status: {{ $item->status->name}}</p>
@@ -94,11 +94,11 @@
         <ul>
             @forelse ($item->bidUsers()->get() as $bidUser)
                 {{-- Only active bids will be displayed. --}}
-                @if ($bidUser->pivot->status->isActive())
+                @if ($bidUser->pivot->isActive())
                     <li>
                         <a href="{{ route('users.items.index', ['user' => $bidUser->id]) }}">{{ $bidUser->full_name }}</a>,
                         {{ $bidUser->pivot->price }} RSD
-                        @if ($item->status->isSold() && $item->buyer->id === $bidUser->id)
+                        @if ($item->isSold() && $item->buyer->id === $bidUser->id)
                             - bought this item!
                         @endif
                     </li>
