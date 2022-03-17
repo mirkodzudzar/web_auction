@@ -33,20 +33,37 @@ class UserPolicy
 
     public function createComment(User $user, User $model)
     {
-        $userComments = $model->comments()
-                              ->where('commentator_id', $user->id)
-                              ->get();
+        if ($user->id === $model->id) return false;
+
+        $userCommentsCount = $model->comments()
+                                   ->where('commentator_id', $user->id)
+                                   ->count();
 
         // You can leave only one comment for each user,
         // and you can not leave comment about yourself.
-        if ($user->id !== $model->id && $userComments->count() === 0) {
-            return true;
+        if ($userCommentsCount > 0) {
+            return false;
         }
 
-        return false;
+        return true;
     }
 
-    public function notifications(User $user, User $model)
+    public function seeNotifications(User $user, User $model)
+    {
+        return $user->id === $model->id;
+    }
+
+    public function markAsRead(User $user, User $model)
+    {
+        return $user->id === $model->id;
+    }
+    
+    public function markAsUnread(User $user, User $model)
+    {
+        return $user->id === $model->id;
+    }
+
+    public function markAllRead(User $user, User $model)
     {
         return $user->id === $model->id;
     }

@@ -3,9 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Models\Comment;
 use App\Http\Requests\UpdateUser;
-use App\Http\Requests\CreateComment;
 
 class UserController extends Controller
 {
@@ -75,66 +73,5 @@ class UserController extends Controller
             'user' => $user,
             'items' => $items,
         ]);
-    }
-
-    public function comments(User $user)
-    {
-        return view('users.comments', [
-            'user' => $user,
-        ]);
-    }
-
-    public function createComment(CreateComment $request, User $user)
-    {
-        $this->authorize($user);
-        
-        $validated = $request->validated();
-        $comment = Comment::make([
-            'text' => $validated['text'],
-        ]);
-        
-        $comment->user()->associate($user);
-        $comment->commentator()->associate(auth()->id());
-
-        $comment->save();
-
-        return redirect()->route('users.comments', ['user' => $user->id])
-                         ->withStatus("You have commented on user '{$user->full_name}'");
-    }
-
-    public function notifications(User $user)
-    {
-        $this->authorize($user);
-
-        $notifications = $user->notifications;
-
-        return view('users.notifications', [
-            'notifications' => $notifications,
-        ]);
-    }
-
-    public function markAsRead(User $user, $id)
-    {
-        $notification = $user->notifications()->where('id', $id)->first();
-        $notification->markAsRead();
-
-        return back();
-    }
-
-    public function markAsUnread(User $user, $id)
-    {
-        $notification = $user->notifications()->where('id', $id)->first();
-        $notification->markAsUnread();
-
-        return back();
-    }
-
-    public function markAllRead(User $user)
-    {
-        $user->notifications()->each(function ($notification) {
-            $notification->markAsRead();
-        });
-
-        return back();
     }
 }

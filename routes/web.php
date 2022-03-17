@@ -4,8 +4,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\InvoicesController;
+use App\Http\Controllers\NotificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,12 +25,12 @@ Route::group(['prefix' => 'users/{user}', 'as' => 'users.'], function() {
     Route::get('/items', [UserController::class, 'itemsIndex'])->name('items.index');
     Route::get('/items/bought', [UserController::class, 'itemsBought'])->name('items.bought');
     Route::get('/items/sold', [UserController::class, 'itemsSold'])->name('items.sold');
-    Route::get('/comments', [UserController::class, 'comments'])->name('comments');
-    Route::post('/comments/create', [UserController::class, 'createComment'])->name('comments.create');
-    Route::get('/notifications', [UserController::class, 'notifications'])->name('notifications');
-    Route::get('/notifications/{id}/mark-as-read', [UserController::class, 'markAsRead'])->name('notifications.markAsRead');
-    Route::get('/notifications/{id}/mark-as-unread', [UserController::class, 'markAsUnread'])->name('notifications.markAsUnread');
-    Route::get('/notificaitons/mark-all-read', [UserController::class, 'markAllRead'])->name('notifications.markAllRead');
+    Route::get('/comments', [CommentController::class, 'index'])->name('comments');
+    Route::post('/comments/create', [CommentController::class, 'create'])->name('comments.create');
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications');
+    Route::post('/notifications/{id}/mark-as-read', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
+    Route::post('/notifications/{id}/mark-as-unread', [NotificationController::class, 'markAsUnread'])->name('notifications.markAsUnread');
+    Route::post('/notificaitons/mark-all-read', [NotificationController::class, 'markAllRead'])->name('notifications.markAllRead');
 });
 
 Route::resource('users', UserController::class)->only(['edit', 'update']);
