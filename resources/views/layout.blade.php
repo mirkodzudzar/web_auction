@@ -8,7 +8,7 @@
     </head>
     <body>
       <nav>
-        <a href="{{ route('items.index') }}">Web auction</a>      
+        <a href="{{ route('home.index') }}">Web auction</a>      
         <div>
           <select name="category" onchange="location = this.value;">
             <option selected>-- Categories --</option>

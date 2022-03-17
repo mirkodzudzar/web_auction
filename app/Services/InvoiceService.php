@@ -11,7 +11,7 @@ use LaravelDaily\Invoices\Classes\InvoiceItem;
 
 class InvoiceService
 {
-    public function calculate(Item $item): Invoice
+    public function invoice(Item $item): Invoice
     {
         // We need to use Party (instead of Seller class, to override default config details)
         $client = new Party([

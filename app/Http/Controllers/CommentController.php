@@ -15,7 +15,7 @@ class CommentController extends Controller
         ]);
     }
 
-    public function create(CreateComment $request, User $user)
+    public function store(CreateComment $request, User $user)
     {
         $this->authorize('createComment', $user);
         

@@ -6,7 +6,6 @@ use App\Models\User;
 
 class NotificationController extends Controller
 {
-    
     public function index(User $user)
     {
         $this->authorize('seeNotifications', $user);

@@ -9,27 +9,6 @@ use App\Http\Requests\SearchRequest;
 
 class ItemController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware(['auth'])->except(['index', 'show', 'search']);
-    }
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        $items = Item::withImageAndBidUsersCount()
-                     ->onlyActiveItems()
-                     ->get();
-
-        return view('items.index', [
-            'items' => $items,
-        ]);
-    }
-
     /**
      * Show the form for creating a new resource.
      *

@@ -12,11 +12,11 @@ class InvoicesController extends Controller
         $this->middleware(['auth']);
     }
 
-    public function calculate(Item $item, InvoiceService $invoiceService)
+    public function invoice(Item $item, InvoiceService $invoiceService)
     {
         $this->authorize($item);
 
-        $invoice = $invoiceService->calculate($item);
+        $invoice = $invoiceService->invoice($item);
 
         return $invoice->stream();
     }

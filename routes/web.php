@@ -6,6 +6,7 @@ use App\Http\Controllers\ItemController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InvoicesController;
 use App\Http\Controllers\NotificationController;
 
@@ -20,38 +21,66 @@ use App\Http\Controllers\NotificationController;
 |
 */
 
-/** UserController routes */
-Route::group(['prefix' => 'users/{user}', 'as' => 'users.'], function() {
-    Route::get('/items', [UserController::class, 'itemsIndex'])->name('items.index');
-    Route::get('/items/bought', [UserController::class, 'itemsBought'])->name('items.bought');
-    Route::get('/items/sold', [UserController::class, 'itemsSold'])->name('items.sold');
-    Route::get('/comments', [CommentController::class, 'index'])->name('comments');
-    Route::post('/comments/create', [CommentController::class, 'create'])->name('comments.create');
-    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications');
-    Route::post('/notifications/{id}/mark-as-read', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
-    Route::post('/notifications/{id}/mark-as-unread', [NotificationController::class, 'markAsUnread'])->name('notifications.markAsUnread');
-    Route::post('/notificaitons/mark-all-read', [NotificationController::class, 'markAllRead'])->name('notifications.markAllRead');
-});
+/****************** GUEST ROUTES ******************/
 
-Route::resource('users', UserController::class)->only(['edit', 'update']);
+/** HomeController routes */
+Route::get('/', [HomeController::class, 'index'])->name('home.index');
 
-/** ItemController routes */
-Route::get('/', [ItemController::class, 'index'])->name('items.index');
-
-Route::group(['prefix' => 'items', 'as' => 'items.'], function() {
-    Route::post('/{item}/cancel-item', [ItemController::class, 'cancelItem'])->name('cancel_item');
-    Route::post('/{item}/cancel-bid', [ItemController::class, 'cancelBid'])->name('cancel_bid');
-    Route::post('/{item}/bid', [ItemController::class, 'bid'])->name('bid');
-    Route::get('/search', [ItemController::class, 'search'])->name('search');
-});
-
-Route::resource('items', ItemController::class)->only(['create', 'store', 'show']);
-
-/** CategoryController routes */
-Route::resource('categories', CategoryController::class)->only(['show']);
-
-/** InvoicesController routes */
-Route::get('items/{item}/invoice', [InvoicesController::class, 'calculate'])->name('invoices.calculate');
+/** CategoryContorller routes */
+Route::get('/categories/{category}', [CategoryController::class, 'show'])->name('categories.show');
 
 /** Auth routes */
 Auth::routes(['reset' => false]);
+
+/** USERS ROUTES */
+Route::group(['prefix' => 'users/{user}', 'as' => 'users.'], function() {
+    /** UserController routes */
+    Route::get('/items', [UserController::class, 'itemsIndex'])->name('items.index');
+
+    /** CommentController routes */
+    Route::get('/comments', [CommentController::class, 'index'])->name('comments');
+});
+
+/** ITEMS ROUTES */
+Route::group(['prefix' => 'items', 'as' => 'items.'], function() {
+    /** ItemController routes */
+    Route::get('{item}', [ItemController::class, 'show'])->name('show');
+    Route::get('/search', [ItemController::class, 'search'])->name('search');
+});
+
+/****************** AUTH ROUTES ******************/
+
+Route::group(['middleware' => 'auth'], function() {
+
+    /** USERS ROUTES */
+    Route::group(['prefix' => 'users/{user}', 'as' => 'users.'], function() {
+        /** UserController routes */
+        Route::get('/edit', [UserController::class, 'edit'])->name('edit');
+        Route::put('', [UserController::class, 'update'])->name('update');
+        Route::get('/items/bought', [UserController::class, 'itemsBought'])->name('items.bought');
+        Route::get('/items/sold', [UserController::class, 'itemsSold'])->name('items.sold');
+
+        /** CommentController routes */
+        Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
+
+        /** NotificationController routes */
+        Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications');
+        Route::post('/notifications/{id}/mark-as-read', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
+        Route::post('/notifications/{id}/mark-as-unread', [NotificationController::class, 'markAsUnread'])->name('notifications.markAsUnread');
+        Route::post('/notificaitons/mark-all-read', [NotificationController::class, 'markAllRead'])->name('notifications.markAllRead');
+    });
+
+    /** ITEMS ROUTES */
+    Route::group(['prefix' => 'items', 'as' => 'items.'], function() {
+    
+        /** ItemController routes */
+        Route::get('/create', [ItemController::class, 'create'])->name('create');
+        Route::put('', [ItemController::class, 'store'])->name('store');
+        Route::post('/{item}/cancel-item', [ItemController::class, 'cancelItem'])->name('cancel_item');
+        Route::post('/{item}/cancel-bid', [ItemController::class, 'cancelBid'])->name('cancel_bid');
+        Route::post('/{item}/bid', [ItemController::class, 'bid'])->name('bid');
+
+        /** InvoicesController routes */
+        Route::get('{item}/invoice', [InvoicesController::class, 'invoice'])->name('invoice');
+    });
+});

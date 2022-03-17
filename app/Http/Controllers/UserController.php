@@ -6,12 +6,7 @@ use App\Models\User;
 use App\Http\Requests\UpdateUser;
 
 class UserController extends Controller
-{
-    public function __construct()
-    {
-        $this->middleware(['auth'])->except(['itemsIndex']);
-    }
-    
+{    
     public function edit(User $user)
     {
         $this->authorize($user);
