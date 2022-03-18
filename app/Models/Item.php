@@ -110,12 +110,17 @@ class Item extends Model
         return $array;
     }
 
+    public function isExpired()
+    {
+        return ($this->status->id === self::$expired) ? true : false;
+    }
+
     public function isSold()
     {
         return ($this->status->id === self::$sold) ? true : false;
     }
 
-    public function isExpired()
+    public function isExpiredButNotUpdated()
     {
         if (Carbon::parse($this->expires_at) <= now()) {
             return true;
@@ -151,8 +156,9 @@ class Item extends Model
                        ->withCount('bidUsers');
     }
 
-    public function scopeExpired(Builder $builder)
+    public function scopeExpiredButStillActive(Builder $builder)
     {
-        return $builder->whereDate('expires_at', '<=', now());
+        return $builder->whereDate('expires_at', '<=', now())
+                       ->where('status_id', self::$active);
     }
 }

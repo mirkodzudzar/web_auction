@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use App\Events\ItemExpired;
+use App\Events\ItemSold;
+use App\Listeners\NotifyUsersItemExpired;
+use App\Listeners\NotifyUsersItemSold;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -16,6 +20,14 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
         Registered::class => [
             SendEmailVerificationNotification::class,
+        ],
+
+        ItemExpired::class => [
+            NotifyUsersItemExpired::class,
+        ],
+
+        ItemSold::class => [
+            NotifyUsersItemSold::class,
         ],
     ];
 

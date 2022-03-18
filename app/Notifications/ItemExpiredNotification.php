@@ -7,7 +7,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class ItemStatusNotification extends Notification
+class ItemExpiredNotification extends Notification
 {
     use Queueable;
 
@@ -31,7 +31,7 @@ class ItemStatusNotification extends Notification
      */
     public function via($notifiable)
     {
-        return ['database'];
+        return ['mail', 'database'];
     }
 
     /**
@@ -42,10 +42,27 @@ class ItemStatusNotification extends Notification
      */
     public function toMail($notifiable)
     {
-        return (new MailMessage)
-                    ->line('The introduction to the notification.')
-                    ->action('Notification Action', url('/'))
-                    ->line('Thank you for using our application!');
+        return (new MailMessage())->subject("Your item '{$this->item->name}' has been expired")
+                                  ->greeting("Item '{$this->item->name }' has expired!")
+                                  ->line('There were no users that bid on this item.')
+                                  ->line("Starting price was {$this->item->starting_price } RSD.")
+                                  ->action('See item details', route('items.show', ['item' => $this->item->id]))
+                                  ->line('Thank you for using our application!');
+    }
+
+    /**
+     * Get the database representation of the notification.
+     *
+     * @param  mixed  $notifiable
+     * @return array
+     */
+    public function toDatabase($notifiable)
+    {
+        return [
+            'item_id' => $this->item->id,
+            'name' => $this->item->name,
+            'status' => $this->item->status->name,
+        ];
     }
 
     /**
@@ -57,9 +74,7 @@ class ItemStatusNotification extends Notification
     public function toArray($notifiable)
     {
         return [
-            'item_id' => $this->item->id,
-            'name' => $this->item->name,
-            'status' => $this->item->status->name,
+            //
         ];
     }
 }

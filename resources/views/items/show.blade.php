@@ -56,13 +56,13 @@
     </p>
 
     {{-- Displaying how much time is left until the item expires. --}}
-    @if ($item->isActive() && !$item->isExpired())
+    @if ($item->isActive() && !$item->isExpiredButNotUpdated())
       <p>Auction will end in: {{ $item->expirationTime() }}</p>
     @else
       @auth
         @if ($item->user->id === auth()->id())
           {{-- In case that cron does not run yet --}}
-          @if ($item->isExpired() && $item->isActive())
+          @if ($item->isExpiredButNotUpdated() && $item->isActive())
             <p>Status: on hold</p>
           @else
             <p>Status: {{ $item->status->name}}</p>

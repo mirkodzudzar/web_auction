@@ -27,7 +27,7 @@ class ItemPolicy
             return $user->id === $item->user->id || $user->id === $item->buyer->id;
         }
 
-        if (!$item->isActive() || $item->isExpired()) {
+        if (!$item->isActive() || $item->isExpiredButNotUpdated()) {
             // If we are guest, we can not visit item that is not active or expired.
             if(is_null($user)) return false;
 
@@ -39,7 +39,7 @@ class ItemPolicy
     
     public function cancelItem(User $user, Item $item)
     {
-        if ($item->isActive() && !$item->isExpired()) {
+        if ($item->isActive() && !$item->isExpiredButNotUpdated()) {
             return $user->id === $item->user->id;
         }
 
@@ -51,7 +51,7 @@ class ItemPolicy
         // You can not bid for your own item.
         if ($item->user->id === $user->id) return false;
 
-        if ($item->isActive() && !$item->isExpired()) {
+        if ($item->isActive() && !$item->isExpiredButNotUpdated()) {
             $itemUser = $item->bidUsers()
                              ->where('user_id', $user->id)
                              ->first();
@@ -69,10 +69,10 @@ class ItemPolicy
         // You can not cancel bid for your own item.
         if ($item->user->id === $user->id) return false;
 
-        if ($item->isActive() && !$item->isExpired()) {
+        if ($item->isActive() && !$item->isExpiredButNotUpdated()) {
             $itemUser = $item->bidUsers()
                              ->where('user_id', $user->id)
-                             ->onlyActiveBidItemUsers()
+                             ->wherePivot('status_id', Item::$active)
                              ->first();
             // Will return true if we have bid already.
             return isset($itemUser);
@@ -81,7 +81,7 @@ class ItemPolicy
         return false;
     }
 
-    public function calculate(User $user, Item $item)
+    public function invoice(User $user, Item $item)
     {
         if (is_null($item->buyer)) return false;
 
