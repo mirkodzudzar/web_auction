@@ -1,5 +1,5 @@
 #!/bin/bash
-APP_PATH="/var/www/laravel_deploy"
+APP_PATH="/var/www/web_auction"
 sudo chmod -R 777 $APP_PATH
 cd $APP_PATH
 # sudo aws --region eu-west-1 s3 cp "s3://laravel_deploy/dev/env" $APP_PATH/.env

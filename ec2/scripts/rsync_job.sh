@@ -1,6 +1,6 @@
 #!/bin/bash
-APP_PATH="/var/www/laravel_deploy"
-TMP_PATH="/tmp/laravel_deploy"
+APP_PATH="/var/www/web_auction"
+TMP_PATH="/tmp/web_auction"
 cd $APP_PATH
 php artisan down
 cd $TMP_PATH
