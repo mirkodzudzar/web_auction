@@ -4,7 +4,6 @@ files:
   - source: /
     destination: /var/www/web_auction
 file_exists_behavior: OVERWRITE
-#test
 hooks:
   ApplicationStop:
     - location: ec2/scripts/stop_server.sh
