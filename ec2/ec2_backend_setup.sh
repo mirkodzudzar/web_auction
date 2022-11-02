@@ -57,7 +57,7 @@ read DB_PASSWORD
 
 while ! mysql -h $DB_HOST -u $DB_USERNAME -p$DB_PASSWORD -e ";" ; do
     echo
-    echo -e $RED"Credentials were not correct, please try again:"$NC
+    echo -e $RED"Cannot connect to the database, please try again:"$NC
     
     echo
     echo "Please enter mysql host name/endpoint:"
@@ -75,13 +75,18 @@ done
 echo
 echo -e $GREEN"Successfully connected!"$NC;
 
-while [[ ! $DB_DATABASE =~ ^[A-Za-z0-9_]+$ ]]; do
-    echo
-    echo -e "Please enter new database name: ${BLUE}(alphanumerics and underscores only)${NC}"
+echo
+echo -e "Please enter existing database name: ${BLUE}(alphanumerics and underscores only)${NC}"
+read DB_DATABASE
+
+DB_RESULT=`mysqlshow -h $DB_HOST -u $DB_USERNAME -p$DB_PASSWORD $DB_DATABASE | grep -v Wildcard | grep -o $DB_DATABASE`
+# while [[ ! $DB_DATABASE =~ ^[A-Za-z0-9_]+$ ]]; do
+while [[ $DB_RESULT != $DB_DATABASE]]; do
+    echo -e $RED"Database does not exist!"$NC
+
+    echo -e "Please enter existing database name: ${BLUE}(alphanumerics and underscores only)${NC}"
     read DB_DATABASE
 done
-
-mysql -h $DB_HOST -u $DB_USERNAME -p$DB_PASSWORD -e "CREATE DATABASE IF NOT EXISTS ${DB_DATABASE};"
 
 while [[ -z $APP_URL ]]; do
     echo
