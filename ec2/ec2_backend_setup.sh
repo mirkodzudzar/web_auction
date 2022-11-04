@@ -96,7 +96,6 @@ while [[ -z $APP_URL ]]; do
     echo
     echo "Please enter app URL - IP address or domain: (do not leave empty)"
     read APP_URL
-    echo
 done
 
 sudo sed -i "/APP_URL/c\APP_URL=$APP_URL" .env
