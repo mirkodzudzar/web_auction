@@ -81,12 +81,16 @@ read DB_DATABASE
 
 DB_RESULT=`mysqlshow -h $DB_HOST -u $DB_USERNAME -p$DB_PASSWORD $DB_DATABASE | grep -v Wildcard | grep -o $DB_DATABASE`
 # while [[ ! $DB_DATABASE =~ ^[A-Za-z0-9_]+$ ]]; do
-while [[ $DB_RESULT != $DB_DATABASE]]; do
+while [[ $DB_RESULT != $DB_DATABASE ]]; do
     echo -e $RED"Database does not exist!"$NC
 
     echo -e "Please enter existing database name: ${BLUE}(alphanumerics and underscores only)${NC}"
     read DB_DATABASE
+
+    DB_RESULT=`mysqlshow -h $DB_HOST -u $DB_USERNAME -p$DB_PASSWORD $DB_DATABASE | grep -v Wildcard | grep -o $DB_DATABASE`
 done
+
+echo -e $GREEN$DB_DATABASE$NC
 
 while [[ -z $APP_URL ]]; do
     echo
